@@ -2,7 +2,7 @@
 
 from bpmn_core import bpmn_diagram, bpmn_exporter
 
-# diagram = bpmn_diagram.BPMNDiagram("Example Diagram")
+# diagram = bpmn_diagram.Diagram("Example Diagram")
 
 # swimlane = diagram.add_swimlane("test")
 # task = diagram.add_task("placeholder")
@@ -16,16 +16,15 @@ from bpmn_core import bpmn_diagram, bpmn_exporter
 
 # 2. Automatically create bpmn in python from xml file then export to pddl
 
-from xml_parser import bpmn_2_pddl
+from bpmn_xml_parser import bpmn_parser
 
 file_path = 'bpmn_diagrams/dispatch_of_goods.bpmn'
 
-parser = bpmn_2_pddl.BPMNParser(file_path)
+parser = bpmn_parser.BPMNParser(file_path)
 diagram2 = parser.parse()
 
 exporter2 = bpmn_exporter.BPMNExporter(diagram2)
 exporter2.create_pddl()
 
 # Test Area
-
 diagram2.print_elements()

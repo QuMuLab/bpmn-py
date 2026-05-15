@@ -1,4 +1,4 @@
-class BPMNElement:
+class Element:
 
     def __init__(self, label: str, element_id: str):
         self.label = label
@@ -6,42 +6,54 @@ class BPMNElement:
 
     def __str__(self):
         return f'{self.element_id} : {self.label}'
+    
+    def is_task(self):
+        return isinstance(self, Task)
+    
+    def is_event(self):
+        return isinstance(self, Event)
+    
+    def is_gateway(self):
+        return isinstance(self, Gateway)
+    
+    def is_sequence_flow(self):
+        return isinstance(self, SequenceFlow)
 
-class Pool(BPMNElement):
+class Pool(Element):
     def __init__(self, label: str, element_id: str):
         super().__init__(label, element_id)
 
-class Swimlane(BPMNElement):
+class Swimlane(Element):
 
     def __init__(self, label: str, element_id: str):
         super().__init__(label, element_id)
 
-class Task(BPMNElement):
+class Task(Element):
 
     def __init__(self, label: str, element_id: str, type: str,):
         super().__init__(label, element_id)
         self.type = type
 
-class Event(BPMNElement):
+class Event(Element):
 
     def __init__(self, label: str, element_id: str, type: str):
         super().__init__(label, element_id)
         self.type = type
 
-class Gateway(BPMNElement):
+class Gateway(Element):
 
     def __init__(self, label: str, element_id: str, type: str):
         super().__init__(label, element_id)
         self.type = type
 
-class SequenceFlow(BPMNElement):
+class SequenceFlow(Element):
 
     def __init__(self, label: str, element_id: str, startRef: str, endRef: str):
         super().__init__(label, element_id)
         self.startRef = startRef
         self.endRef = endRef
 
-class MessageFlow(BPMNElement):
+class MessageFlow(Element):
 
     def __init__(self, label: str, element_id: str, startRef: str, endRef: str):
         super().__init__(label, element_id)

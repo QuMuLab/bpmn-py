@@ -20,9 +20,9 @@ class BPMNParser:
     def clean_label(self, label) -> str:
         return label.replace('\n', ' ') if label else None
 
-    def parse(self) -> bpmn_diagram.BPMNDiagram:
+    def parse(self) -> bpmn_diagram.Diagram:
         diagram_name = self.file_path.split('/')[-1][:-5]
-        diagram = bpmn_diagram.BPMNDiagram(diagram_name)
+        diagram = bpmn_diagram.Diagram(diagram_name)
 
         for pool in self.root.findall('.//bpmn:participant', self.namespaces):
             diagram.add_pool(
