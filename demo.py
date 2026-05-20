@@ -27,4 +27,4 @@ exporter2 = bpmn_exporter.BPMNExporter(diagram2)
 exporter2.create_pddl()
 
 # Test Area
-diagram2.print_elements()
+# diagram2.print_elements()

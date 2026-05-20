@@ -4,10 +4,14 @@ from re import sub
 
 # TODO: 
 # Break code into more functions / files?
-# ^ Further simplify / rewrite
+# ^ Further simplify / rewrite -> object oriented
 # Correct problem file names
 # Fix Missing actions
-# Fix pddl error
+# type hint list returns
+# Standardize qouations
+# use types in the pddl - element type they inherent from
+# pddl formatting (spaces between predicates, space after action sub sections), type hint predicates
+# objects / redo the predicates
 
 class BPMNExporter:
 
@@ -93,7 +97,7 @@ class BPMNExporter:
                 if counter >= incoming_count:
                     return ""
                 
-                predicate = f'\t{target_id}_precondition_{counter}'
+                predicate = f'\t({target_id}_precondition_{counter})'
                 parallel_converging_gatways[target_id][0] += 1
 
                 return predicate
@@ -144,6 +148,7 @@ class BPMNExporter:
         lines = []
 
         lines.append(f'\t(:action inclusive_increase_{element_id}')
+        lines.append(f'\t\t:parameters ()')
         lines.append(f'\t\t:precondition (and ({inc_pred}))')
         lines.append('\t\t:effect (and')
         lines.append(f'\t\t\t(not ({inc_pred}))')
@@ -155,6 +160,7 @@ class BPMNExporter:
         lines.append('\t)\n')
 
         lines.append(f'\t(:action inclusive_decrease_{element_id}')
+        lines.append(f'\t\t:parameters ()')
         lines.append(f'\t\t:precondition (and ({dec_pred}))')
         lines.append(f'\t\t:effect (and')
         lines.append(f'\t\t\t(not ({dec_pred}))')
@@ -174,7 +180,7 @@ class BPMNExporter:
         output_folder = os.path.join(os.getcwd(), f'output/{self.diagram.name}')
         os.makedirs(output_folder, exist_ok = True)
 
-        domain_file_path = os.path.join(output_folder, f'{self.diagram.name}_domain.pddl')
+        domain_file_path = os.path.join(output_folder, f'domain.pddl')
         with open(domain_file_path, 'w') as file:
             file.write(pddl_domain)
 
@@ -228,9 +234,9 @@ class BPMNExporter:
             if gateway.type == 'parallelGateway' and incoming_len > 1:
                 parallel_converging_gateways[gateway.element_id] = [0, incoming_len]
 
-        domain = f'(define (domain {self.diagram.name})\n'
-        domain += '\t(:requirements :strips :typing)\n'
-        domain += '\t(:types task event gateway)\n\n'
+        domain = f'(define (domain {self.diagram.name})\n\n'
+        domain += '\t(:requirements\n\t\t:strips\n\t\t:typing\n\t\t:conditional-effects\n\t\t:negative-preconditions\n\t)\n'
+        domain += '\t(:types\n\t\ttask event gateway\n\t)\n\n'
 
         domain += '\t(:predicates\n'
         for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways:
@@ -293,6 +299,7 @@ class BPMNExporter:
             event = start_events[0]
 
             domain += f'\t(:action start_{self.clean_label(event.label)}\n'
+            domain += f'\t\t:parameters ()\n'
             domain += f'\t\t:precondition (and (not (begun)) (not ({event.element_id})))\n'
             domain += f'\t\t:effect (and (begun) ({event.element_id}))\n'
             domain += '\t)\n\n'
@@ -301,6 +308,7 @@ class BPMNExporter:
             start_preds = [self.clean_label(event.element_id) for event in start_events]
 
             domain += f'\t(:action start_process\n'
+            domain += '\t\t:parameters ()\n'
             domain += f"\t\t:precondition (and (not (begun)) {' '.join(f'(not ({p}))' for p in start_preds)})\n"
             domain += f"\t\t:effect (and (begun)) {' '.join(f'({p})' for p in start_preds)}\n"
             domain += '\t)\n\n'
@@ -318,6 +326,7 @@ class BPMNExporter:
 
                 domain += counter_actions + '\n'
                 domain += f'\t(:action inclusive_diverge_{gateway_id}\n'
+                domain += f'\t\t:parameters ()\n'
                 domain += f'\t\t:precondition (and ({gateway_id}))\n'
                 domain += f'\t\t:effect (and\n'
 
@@ -338,6 +347,7 @@ class BPMNExporter:
                     predicate = self.get_parallel_gateway_precondition(gateway_id, parallel_converging_gateways, get_outgoing)
 
                     domain += f'\t(:action inclusive_converge_{gateway_id}\n'
+                    domain += f'\t\t:parameters ()\n'
                     domain += f'\t\t:precondition (and ({gateway_id}) (at_least_one_branch_{diverge_id}) (inclusive_counter_{diverge_id}_0))\n'
                     domain += f'\t\t:effect (and ({next_id}) (not ({gateway_id})) (not (at_least_one_branch_{diverge_id})){predicate})\n'
                     domain += f'\t)\n\n'
@@ -367,8 +377,9 @@ class BPMNExporter:
                     effects = [f'({target})' for target in targets]
 
                     domain += f'\t(:action {action_name}\n'
+                    domain += f'\t\t:parameters ()\n'
                     domain += f"\t\t:precondition (and {' '.join(preconds)})\n"
-                    domain += f"\t\t:effect (and {' '.join(effects)} (not ({element.element_id})) ({predicate}))\n"
+                    domain += f"\t\t:effect (and {' '.join(effects)} (not ({element.element_id})){predicate})\n"
                     domain += f'\t)\n\n'
 
                     generated.add(gateway.element_id)
@@ -418,16 +429,18 @@ class BPMNExporter:
                     effect = f'({targets[0]})'
 
                     domain += f'\t(:action {action_name}\n'
+                    domain += f'\t\t:parameters ()\n'
                     domain += f'\t\t:precondition (and {precondition})\n'
-                    domain += f'\t\t:effect (and {effect} (not {precondition}) ({predicate}))\n'
+                    domain += f'\t\t:effect (and {effect} (not {precondition}){predicate})\n'
                     domain += '\t)\n\n'
 
                 elif len(targets) > 1:
                     effects = [f'{target}' for target in targets]
                     
                     domain += f'\t(:action {action_name}\n'
+                    domain += f'\t\t:parameters ()\n'
                     domain += f'\t\t:precondition (and {precondition})\n'
-                    domain += f"\t\t:effect (and {' '.join(effects)} (not {precondition}) ({predicate}))\n"
+                    domain += f"\t\t:effect (and {' '.join(effects)} (not {precondition}){predicate})\n"
                     domain += '\t)\n\n'
 
                 generated.add(element.element_id)
@@ -501,6 +514,7 @@ class BPMNExporter:
                     standard_preconditions = sorted(standard_preconditions)
 
                     domain += f'\t(:action {action_name}\n'
+                    domain += f'\t\t:parameters ()\n'
                     domain += f"\t\t:precondition (and {' '.join(standard_preconditions)})"
 
                     for marker in branch_markers:
@@ -512,7 +526,7 @@ class BPMNExporter:
                     domain += f'\t\t:effect (and'
 
                     if effects:
-                        domain += f" {' '.join(sorted(set(effects)))} ({predicate})"
+                        domain += f" {' '.join(sorted(set(effects)))}{predicate}"
 
                     if oneof_effects:
                         unique_effects = list(dict.fromkeys(oneof_effects))
@@ -581,6 +595,7 @@ class BPMNExporter:
                         break
 
                 domain += f'\t(:action {action_name}\n'
+                domain += f'\t\t:parameters ()\n'
                 extra_preconditions = set()
 
                 if inclusive_diverge_src:
@@ -633,6 +648,7 @@ class BPMNExporter:
         end_events = [event for event in self.diagram.events if event.type == 'endEvent']
         for event in end_events:
             domain += f'\t(:action goal_{self.clean_label(event.label)}\n'
+            domain += f'\t\t:parameters ()\n'
             domain += f'\t\t:precondition (and ({event.element_id}))\n'
             domain += f'\t\t:effect (and (finished))\n'
             domain += '\t)\n\n'
@@ -641,7 +657,7 @@ class BPMNExporter:
 
         return domain, predicates, start_events
 
-    def generate_pddl_problems(self, start_events: list[bpmn_elements.Event], predicates: set) -> list[str]:
+    def generate_pddl_problems(self, start_events: list[bpmn_elements.Event], predicates: set[str]) -> list[str]:
         problems = []
         count = 0
 
