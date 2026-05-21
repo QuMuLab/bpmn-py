@@ -30,7 +30,7 @@ class Swimlane(Element):
 
 class Task(Element):
 
-    def __init__(self, label: str, element_id: str, type: str,):
+    def __init__(self, label: str, element_id: str, type: str):
         super().__init__(label, element_id)
         self.type = type
 

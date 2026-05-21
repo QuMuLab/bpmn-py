@@ -1,6 +1,9 @@
 from bpmn_core import bpmn_diagram, bpmn_elements, pddl_classes
 import os
 
+# TODO:
+# Incorrect gateway type (exlusive marked as parallel)
+
 class BPMNExporter:
 
     def __init__(self, diagram: bpmn_diagram.Diagram):
@@ -34,8 +37,14 @@ class BPMNExporter:
         elements_by_id = {element.element_id: element for element in elements}
         outgoing = {}
         incoming = {}
-        start_events = []
         domain = pddl_classes.Domain(self.diagram)
+
+        domain.create_action(
+            name = "test",
+            parameters = ['?t - task'],
+            preconditions = ['test'],
+            effects = ['test']
+        )
 
         def get_outgoing(element_id: str) -> list:
             return outgoing.get(element_id, [])
@@ -58,11 +67,11 @@ class BPMNExporter:
                 elements_by_id[seq_flow.element_id] = seq_flow
 
         for flow in self.diagram.seq_flows:
-            src = flow.startRef
-            trgt = flow.endRef
+            source = flow.startRef
+            target = flow.endRef
 
-            outgoing.setdefault(src, []).append(trgt)
-            incoming.setdefault(trgt, []).append(src)
+            outgoing.setdefault(source, []).append(target)
+            incoming.setdefault(target, []).append(source)
 
         for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways:
             pass
@@ -70,10 +79,21 @@ class BPMNExporter:
         start_events = [event for event in self.diagram.events if event.type == 'startEvent']
 
         if len(start_events) == 1:
-            pass
+            start_event = start_events[0]
+            domain.create_action(
+                name = f"start_{start_event.label}",
+                parameters = [],
+                preconditions = ["not (begun)", f"not ({start_event.element_id})"],
+                effects = ["begun", f"{start_event.element_id}"]
+            )
 
         elif len(start_events) > 1:
-            pass
+            domain.create_action(
+                name = "start_process",
+                parameters = [],
+                preconditions = ["not (begun)"] + [f"not ({start_event.element_id})" for start_event in start_events],
+                effects = ["begun"] + [f"{start_event.element_id}" for start_event in start_events]
+            )
 
         for gateway in self.diagram.gateways:
             pass
@@ -90,6 +110,22 @@ class BPMNExporter:
         problems = []
 
         for count, start_event in enumerate(start_events):
-            problems.append(pddl_classes.Problem(domain, start_event, count))
+            objects = [
+                f"{element.element_id} - {element.type}" 
+                for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways
+            ]
+            goals = ["finished"]
+            initials = []
+
+            problem = pddl_classes.Problem(
+                domain, 
+                start_event, 
+                count, 
+                objects, 
+                goals, 
+                initials
+            )
+
+            problems.append(problem)
 
         return problems

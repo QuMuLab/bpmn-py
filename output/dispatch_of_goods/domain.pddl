@@ -15,8 +15,35 @@
     )
 
     (:predicates
-        (begun)
-        (finished)
+		(test)
+		(begun)
+		(StartEvent_1)
     )
+
+	(:action test
+	    :parameters (?t - task)
+
+	    :precondition (and
+			(test)
+	    )
+
+	    :effect (and
+			(test)
+	    )
+	)
+
+	(:action start_Ship_goods
+	    :parameters ()
+
+	    :precondition (and
+			(not (begun))
+			(not (StartEvent_1))
+	    )
+
+	    :effect (and
+			(begun)
+			(StartEvent_1)
+	    )
+	)
 
 )

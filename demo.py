@@ -2,15 +2,14 @@
 
 from bpmn_core import bpmn_diagram, bpmn_exporter
 
-# diagram = bpmn_diagram.Diagram("Example Diagram")
+diagram = bpmn_diagram.Diagram("Example Diagram")
 
-# swimlane = diagram.add_swimlane("test")
-# task = diagram.add_task("placeholder")
-# event = diagram.add_event("end")
+swimlane = diagram.add_swimlane("test", "1")
+task = diagram.add_task("placeholder", "2", "userTask")
+event = diagram.add_event("end", "3", "endEvent")
+sequence_flow = diagram.add_sequence_flow("example", "4", task, event)
 
-# diagram.connect(task, event)
-
-# exporter = bpmn_exporter.BPMNExporter(diagram)
+exporter = bpmn_exporter.BPMNExporter(diagram)
 # exporter.create_bpmn_xml()
 # exporter.create_pddl()
 
@@ -26,5 +25,4 @@ diagram2 = parser.parse()
 exporter2 = bpmn_exporter.BPMNExporter(diagram2)
 exporter2.create_pddl()
 
-# Test Area
 # diagram2.print_elements()

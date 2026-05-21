@@ -36,7 +36,7 @@ class BPMNExporter:
             if not src_elem:
                 continue
 
-            if src_elem.type == 'ExclusiveGateway':
+            if src_elem.type == 'exclusiveGateway':
                 preconditions.add(f'{element_id}')
 
             elif src_elem.type == 'inclusiveGateway' and len(get_outgoing(src_id)) > 1:
@@ -96,7 +96,7 @@ class BPMNExporter:
 
                 if counter >= incoming_count:
                     return ""
-                
+                    
                 predicate = f'\t({target_id}_precondition_{counter})'
                 parallel_converging_gatways[target_id][0] += 1
 
@@ -408,7 +408,7 @@ class BPMNExporter:
 
                 predicate = self.get_parallel_gateway_precondition(element.element_id, parallel_converging_gateways, get_outgoing)
                 
-                domain += f'\t(action {action_name}\n'
+                domain += f'\t(:action {action_name}\n'
                 domain += f'\t\t:precondition (and {precondition})\n'
                 domain += f'\t\t:effect (and'
 
@@ -549,7 +549,7 @@ class BPMNExporter:
                         if target_element and target_element.type == 'inclusiveGateway' and len(get_incoming(target_element.element_id)) > 1:
                             diverging_id = converge_to_diverge.get(target_element.element_id)
                             if diverging_id:
-                                domain = f' (decrease_{diverging_id})'
+                                domain += f' (decrease_{diverging_id})'
 
                     domain += ')\n'
                     domain += '\t)\n\n'
