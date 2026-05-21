@@ -5,9 +5,9 @@ import xml.etree.ElementTree as ET
 
 from bpmn_core import bpmn_diagram
 
-task_types = ['userTask', 'serviceTask', 'manualTask', 'scriptTask', 'task'] # send task, recieve task, business rule task
-event_types = ['startEvent', 'endEvent', 'intermediateCatchEvent']
-gateway_types = ['eventBasedGateway', 'exlusiveGateway', 'parallelGateway', 'inclusiveGateway'] # complex gateway
+task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "task"] # send task, recieve task, business rule task
+event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
+gateway_types = ["eventBasedGateway", "exlusiveGateway", "parallelGateway", "inclusiveGateway"] # complex gateway
 
 class BPMNParser:
     
@@ -15,65 +15,65 @@ class BPMNParser:
         self.file_path = file_path
         self.tree = ET.parse(file_path)
         self.root = self.tree.getroot()
-        self.namespaces = {'bpmn': 'http://www.omg.org/spec/BPMN/20100524/MODEL'}
+        self.namespaces = {"bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
 
     def clean_label(self, label) -> str:
-        return label.replace('\n', ' ') if label else None
+        return label.replace("\n", " ") if label else None
 
     def parse(self) -> bpmn_diagram.Diagram:
-        diagram_name = self.file_path.split('/')[-1][:-5]
+        diagram_name = self.file_path.split("/")[-1][:-5]
         diagram = bpmn_diagram.Diagram(diagram_name)
 
-        for pool in self.root.findall('.//bpmn:participant', self.namespaces):
+        for pool in self.root.findall(".//bpmn:participant", self.namespaces):
             diagram.add_pool(
-                label = self.clean_label(pool.get('name')),
-                element_id = pool.get('id')
+                label = self.clean_label(pool.get("name")),
+                element_id = pool.get("id")
             )
 
-        for swimlane in self.root.findall('.//bpmn:lane', self.namespaces):
+        for swimlane in self.root.findall(".//bpmn:lane", self.namespaces):
             diagram.add_swimlane(
-                label = self.clean_label(swimlane.get('name')),
-                element_id = swimlane.get('id')
+                label = self.clean_label(swimlane.get("name")),
+                element_id = swimlane.get("id")
             )
 
         for task_type in task_types:
-            for task in self.root.findall(f'.//bpmn:{task_type}', self.namespaces):
+            for task in self.root.findall(f".//bpmn:{task_type}", self.namespaces):
                 diagram.add_task(
-                    label = self.clean_label(task.get('name')),
-                    element_id = task.get('id'),
+                    label = self.clean_label(task.get("name")),
+                    element_id = task.get("id"),
                     type = task_type
                 )
 
         for event_type in event_types:
-            for event in self.root.findall(f'.//bpmn:{event_type}', self.namespaces):
+            for event in self.root.findall(f".//bpmn:{event_type}", self.namespaces):
                 diagram.add_event(
-                    label = self.clean_label(event.get('name')),
-                    element_id = event.get('id'),
+                    label = self.clean_label(event.get("name")),
+                    element_id = event.get("id"),
                     type = event_type
                 )
 
         for gateway_type in gateway_types:
-            for gateway in self.root.findall(f'.//bpmn:{gateway_type}', self.namespaces):
+            for gateway in self.root.findall(f".//bpmn:{gateway_type}", self.namespaces):
                 diagram.add_gateway(
-                    label = self.clean_label(gateway.get('name')),
-                    element_id = gateway.get('id'),
+                    label = self.clean_label(gateway.get("name")),
+                    element_id = gateway.get("id"),
                     type = gateway_type
                 )
         
-        for seq_flow in self.root.findall('.//bpmn:sequenceFlow', self.namespaces):
+        for seq_flow in self.root.findall(".//bpmn:sequenceFlow", self.namespaces):
             diagram.add_sequence_flow(
-                label = self.clean_label(seq_flow.get('name')),
-                element_id = seq_flow.get('id'),
-                startRef = seq_flow.get('sourceRef'),
-                endRef = seq_flow.get('targetRef')
+                label = self.clean_label(seq_flow.get("name")),
+                element_id = seq_flow.get("id"),
+                startRef = seq_flow.get("sourceRef"),
+                endRef = seq_flow.get("targetRef")
             )
 
-        for msg_flow in self.root.findall('.//bpmn:messageFlow', self.namespaces):
+        for msg_flow in self.root.findall(".//bpmn:messageFlow", self.namespaces):
             diagram.add_message_flow(
-                label = self.clean_label(msg_flow.get('name')),
-                element_id = msg_flow.get('id'),
-                startRef = msg_flow.get('sourceRef'),
-                endRef = msg_flow.get('targetRef')
+                label = self.clean_label(msg_flow.get("name")),
+                element_id = msg_flow.get("id"),
+                startRef = msg_flow.get("sourceRef"),
+                endRef = msg_flow.get("targetRef")
             )
 
         return diagram

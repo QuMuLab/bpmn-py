@@ -1,4 +1,4 @@
-# 1. 'Manually' create bpmn in python then export to xml or pddl
+# 1. "Manually" create bpmn in python then export to xml or pddl
 
 from bpmn_core import bpmn_diagram, bpmn_exporter
 
@@ -18,7 +18,7 @@ from bpmn_core import bpmn_diagram, bpmn_exporter
 
 from bpmn_xml_parser import bpmn_parser
 
-file_path = 'bpmn_diagrams/dispatch_of_goods.bpmn'
+file_path = "bpmn_diagrams/dispatch_of_goods.bpmn"
 
 parser = bpmn_parser.BPMNParser(file_path)
 diagram2 = parser.parse()
