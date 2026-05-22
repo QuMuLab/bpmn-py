@@ -3,22 +3,15 @@ from textwrap import indent, dedent
 from re import sub
 
 class Domain:
-    def __init__(self, diagram: bpmn_diagram.Diagram):
+    def __init__(self, diagram: bpmn_diagram.Diagram, predicates: list[str]):
         self.name = diagram.name
         self.objects = [element for element in diagram.events + diagram.tasks + diagram.gateways]
-        self.predicates = []
+        self.predicates = predicates
         self.action_strs = []
 
     def create_action(self, name: str, parameters: list[str], preconditions: list[str], effects: list[str]):
         action = Action(name, parameters, preconditions, effects)
         self.action_strs.append(action.create_string())
-
-        for predicate in preconditions + effects:
-            if predicate.startswith("not"):
-                predicate = predicate[4 : ].lstrip("(").rstrip(")")
-
-            if predicate not in self.predicates:
-                self.predicates.append(predicate)
 
     def generate_file(self):
         actions = "\n\n".join(self.action_strs)
@@ -43,6 +36,7 @@ class Domain:
             (:types
                 element
                 task event gateway - element
+                userTask serviceTask manualTask scriptTask sendTask recieveTask businessRuleTask - task
                 startEvent endEvent intermediateCatchEvent - event
                 eventBasedGateway exclusiveGateway parallelGateway inclusiveGateway - gateway
             )

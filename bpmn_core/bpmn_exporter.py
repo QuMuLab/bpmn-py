@@ -1,26 +1,22 @@
-from bpmn_core import bpmn_diagram, bpmn_elements, pddl_classes
+from bpmn_core import bpmn_diagram, bpmn_elements
 import os
 
+from . import pddl_classes
+
 # TODO:
-# Incorrect gateway type (exlusive marked as parallel)
-# Exclusive gateways
+# Test
 # Message flows
-# Already have to undo and correctly parameterize?
+# Boundary events & intermediate throw events
+# Export to xml (xml to graph)
 
 class BPMNExporter:
 
     def __init__(self, diagram: bpmn_diagram.Diagram):
         self.diagram = diagram
     
-    def is_valid_message_flow(self, source: bpmn_elements.Element, target: bpmn_elements.Element):
-        if not source or not target:
-            return False
-        
-        return (source.is_task() and target.is_event()) or (source.is_event() and target.is_task())
-    
     def create_pddl(self):
-        pddl_domain, start_events = self.generate_pddl_domain()
-        pddl_problems = self.generate_pddl_problems(pddl_domain, start_events)
+        pddl_domain, start_events, inclusive_pairs = self.generate_pddl_domain()
+        pddl_problems = self.generate_pddl_problems(pddl_domain, start_events, inclusive_pairs)
 
         output_folder = os.path.join(os.getcwd(), f"output/{self.diagram.name}")
         os.makedirs(output_folder, exist_ok = True)
@@ -37,20 +33,27 @@ class BPMNExporter:
 
     def generate_pddl_domain(self) -> tuple[pddl_classes.Domain, list[bpmn_elements.Event]]:
         elements = self.diagram.get_elements()
-        elements_by_id = {element.element_id: element for element in elements}
-        outgoing = {}
-        incoming = {}
-        domain = pddl_classes.Domain(self.diagram)
+        self.elements_by_id = {element.element_id: element for element in elements}
+        self.outgoing = {}
+        self.incoming = {}
+        start_events = [event for event in self.diagram.events if event.type == 'startEvent']
 
-        def get_outgoing(element_id: str) -> list:
-            return outgoing.get(element_id, [])
-    
-        def get_incoming(element_id: str) -> list:
-            return incoming.get(element_id, [])
+        domain = pddl_classes.Domain(self.diagram, predicates = [
+            "begun",
+            "finished",
+
+            "active ?e - element",
+            "completed ?e - element",
+            "connected ?from - element ?to - element",
+
+            "at_least_one_branch ?g - inclusiveGateway",
+            "branch_started ?g - inclusiveGateway ?e - element",
+            "paired_inclusive ?split - inclusiveGateway ?join - inclusiveGateway",
+        ])
     
         for msg_flow in self.diagram.msg_flows:
-            source = elements_by_id[msg_flow.startRef]
-            target = elements_by_id[msg_flow.endRef]
+            source = self.elements_by_id[msg_flow.startRef]
+            target = self.elements_by_id[msg_flow.endRef]
 
             if self.is_valid_message_flow(source, target):
                 seq_flow = self.diagram.add_sequence_flow(
@@ -60,54 +63,150 @@ class BPMNExporter:
                     endRef = msg_flow.endRef
                 )
 
-                elements_by_id[seq_flow.element_id] = seq_flow
+                self.elements_by_id[seq_flow.element_id] = seq_flow
 
         for flow in self.diagram.seq_flows:
             source = flow.startRef
             target = flow.endRef
 
-            outgoing.setdefault(source, []).append(target)
-            incoming.setdefault(target, []).append(source)
+            self.outgoing.setdefault(source, []).append(target)
+            self.incoming.setdefault(target, []).append(source)
 
-        for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways:
-            pass
+        inclusive_pairs = self.map_inclusive_gateway_pairs(start_events)
 
-        start_events = [event for event in self.diagram.events if event.type == 'startEvent']
+        domain.create_action(
+            name = "start_process",
+            parameters = ["?e - startEvent"],
+            preconditions = ["not (begun)", "not (active ?e)"],
+            effects = ["begun", "active ?e"]
+        )
 
-        if len(start_events) == 1:
-            start_event = start_events[0]
-            domain.create_action(
-                name = f"start_{start_event.label}",
-                parameters = [],
-                preconditions = ["not (begun)", f"not ({start_event.element_id})"],
-                effects = ["begun", f"{start_event.element_id}"]
-            )
+        domain.create_action(
+            name = "advance_task",
+            parameters = ["?from - task", "?to - element"],
+            preconditions = ["active ?from", "connected ?from ?to"],
+            effects = [
+                "not (active ?from)", 
+                "completed ?from", 
+                "active ?to"
+            ]
+        )
 
-        elif len(start_events) > 1:
-            domain.create_action(
-                name = "start_process",
-                parameters = [],
-                preconditions = ["not (begun)"] + [f"not ({start_event.element_id})" for start_event in start_events],
-                effects = ["begun"] + [f"{start_event.element_id}" for start_event in start_events]
-            )
+        domain.create_action(
+            name = "advance_start_event",
+            parameters = ["?from - startEvent", "?to - element"],
+            preconditions = ["active ?from", "connected ?from ?to"],
+            effects = [
+                "not (active ?from)",
+                "completed ?from",
+                "active ?to"
+            ]
+        )
 
-        for gateway in self.diagram.gateways:
-            pass
+        domain.create_action(
+            name = "advance_intermediate_event",
+            parameters = ["?from - intermediateCatchEvent", "?to - element"],
+            preconditions = ["active ?from", "connected ?from ?to"],
+            effects = [
+                "not (active ?from)",
+                "completed ?from",
+                "active ?to"
+            ]
+        )
 
-        for task in self.diagram.tasks:
-            pass
+        domain.create_action(
+            name = "exclusive_gateway_choose",
+            parameters = ["?g - exclusiveGateway", "?to - element"],
+            preconditions = ["active ?g", "connected ?g ?to"],
+            effects = ["not (active ?g)", "active ?to", "completed ?g"]
+        )
 
-        for end_event in [event for event in self.diagram.events if event.type == 'endEvent']:
-            domain.create_action(
-                name = f"goal_{end_event.label}",
-                parameters = [],
-                preconditions = [f"{end_event.element_id}"],
-                effects = ["finished"]
-            )
+        domain.create_action(
+            name = "event_based_gateway_choose",
+            parameters = ["?g - eventBasedGateway", "?to - element"],
+            preconditions = ["active ?g", "connected ?g ?to"],
+            effects = ["not (active ?g)", "active ?to", "completed ?g"]
+        )
 
-        return domain, start_events
+        domain.create_action(
+            name = "parallel_gateway_split",
+            parameters = ["?g - parallelGateway"],
+            preconditions = ["active ?g"],
+            effects = [
+                "not (active ?g)",
+                "forall (?to - element) (when (connected ?g ?to) (active ?to))",
+                "completed ?g"
+            ]
+        )
 
-    def generate_pddl_problems(self, domain: pddl_classes.Domain, start_events: list[bpmn_elements.Event]) -> list[pddl_classes.Problem]:
+        domain.create_action(
+            name = "parallel_gateway_join",
+            parameters = ["?g - parallelGateway", "?to - element"],
+            preconditions = [
+                "connected ?g ?to",
+                "forall (?from - element) (imply (connected ?from ?g) (active ?from))"
+            ],
+            effects = [
+                "active ?to",
+                "completed ?g"
+            ]
+        )
+
+        domain.create_action(
+            name = "inclusive_gateway_choose_branch",
+            parameters = ["?g - inclusiveGateway", "?to - element"],
+            preconditions = [
+                "active ?g",
+                "connected ?g ?to",
+                "not (branch_started ?g ?to)"
+            ],
+            effects = [
+                "active ?to",
+                "branch_started ?g ?to",
+                "at_least_one_branch ?g"
+            ]
+        )
+
+        domain.create_action(
+            name = "inclusive_gateway_finish_choices",
+            parameters = ["?g - inclusiveGateway"],
+            preconditions = ["active ?g", "at_least_one_branch ?g"],
+            effects = ["not (active ?g)", "completed ?g",]
+        )
+
+        domain.create_action(
+            name = "inclusive_gateway_join",
+            parameters = [
+                "?split - inclusiveGateway",
+                "?join - inclusiveGateway",
+                "?to - element"
+            ],
+            preconditions = [
+                "paired_inclusive ?split ?join",
+                "active ?join",
+                "connected ?join ?to",
+                "at_least_one_branch ?split",
+                "forall (?branch - element) (imply (branch_started ?split ?branch) (completed ?branch))"
+            ],
+            effects = [
+                "not (active ?join)",
+                "completed ?g",
+                "active ?to",
+                "not (at_least_one_branch ?split)",
+                "forall (?branch - element) (when (branch_started ?split ?branch) (not (branch_started ?split ?branch)))"
+            ]
+        )
+
+        domain.create_action(
+            name = "end_process",
+            parameters = ["?e - endEvent"],
+            preconditions = ["active ?e"],
+            effects = ["finished"]
+        )
+
+        return domain, start_events, inclusive_pairs
+
+    def generate_pddl_problems(self, domain: pddl_classes.Domain, start_events: list[bpmn_elements.Event], inclusive_pairs: dict[str, str]) -> list[pddl_classes.Problem]:
         problems = []
 
         for count, start_event in enumerate(start_events):
@@ -116,7 +215,8 @@ class BPMNExporter:
                 for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways
             ]
             goals = ["finished"]
-            initials = []
+            connections = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows ]
+            inclusive_pairs = [f"paired_inclusive {split_id} {join_id}" for split_id, join_id in inclusive_pairs.items()]
 
             problem = pddl_classes.Problem(
                 domain, 
@@ -124,9 +224,57 @@ class BPMNExporter:
                 count, 
                 objects, 
                 goals, 
-                initials
+                connections + inclusive_pairs
             )
 
             problems.append(problem)
 
         return problems
+    
+    def is_valid_message_flow(self, source: bpmn_elements.Element, target: bpmn_elements.Element):
+        if not source or not target:
+            return False
+        
+        return (source.is_task() and target.is_event()) or (source.is_event() and target.is_task())
+    
+    def get_outgoing(self, element_id: str) -> list:
+        return self.outgoing.get(element_id, [])
+    
+    def get_incoming(self, element_id: str) -> list:
+        return self.incoming.get(element_id, [])
+    
+    def map_inclusive_gateway_pairs(self, start_events: list[bpmn_elements.Event]) -> dict[str, str]:
+        result = {}
+
+        for start_event in start_events:
+            visited = set()
+            stack = []
+            queue = [start_event.element_id]
+
+            while queue:
+                cur_id = queue.pop(0)
+                cur_element = self.elements_by_id.get(cur_id)
+
+                if cur_id in visited or not cur_element:
+                    continue
+
+                visited.add(cur_id)
+
+                if cur_element.type == "inclusiveGateway":
+                    n_incoming = len(self.get_incoming(cur_id))
+                    n_outgoing = len(self.get_outgoing(cur_id))
+
+                    if n_incoming == 1 and n_outgoing > 1:
+                        stack.append(cur_id)
+
+                    elif n_incoming > 1 and n_outgoing == 1:
+                        if stack:
+                            split_id = stack.pop()
+                            join_id = cur_id
+                            result[split_id] = join_id
+
+                for target_id in self.get_outgoing(cur_id):
+                    if target_id not in visited:
+                        queue.append(target_id)
+
+        return result

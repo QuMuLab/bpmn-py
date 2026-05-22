@@ -5,9 +5,9 @@ import xml.etree.ElementTree as ET
 
 from bpmn_core import bpmn_diagram
 
-task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "task"] # send task, recieve task, business rule task
+task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "sendTask", "recieveTask", "businessRuleTask", "task"]
 event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
-gateway_types = ["eventBasedGateway", "exlusiveGateway", "parallelGateway", "inclusiveGateway"] # complex gateway
+gateway_types = ["eventBasedGateway", "exclusiveGateway", "parallelGateway", "inclusiveGateway"] # complex gateway
 
 class BPMNParser:
     

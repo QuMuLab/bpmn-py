@@ -37,7 +37,7 @@ class BPMNExporter:
                 continue
 
             if src_elem.type == 'exclusiveGateway':
-                preconditions.add(f'{element_id}')
+                preconditions.add(f'({element_id})')
 
             elif src_elem.type == 'inclusiveGateway' and len(get_outgoing(src_id)) > 1:
                 branch_pred = f'branch_started_{src_id}_{element_id}'
@@ -96,7 +96,7 @@ class BPMNExporter:
 
                 if counter >= incoming_count:
                     return ""
-                    
+
                 predicate = f'\t({target_id}_precondition_{counter})'
                 parallel_converging_gatways[target_id][0] += 1
 
@@ -391,7 +391,7 @@ class BPMNExporter:
                     for target in targets:
                         effect_predicates =[f'({target})']
 
-                        if element.type == 'eventBasedGateway':
+                        if gateway.type == 'eventBasedGateway':
                             next_flows = [flow for flow in self.diagram.seq_flows if flow.startRef == target]
 
                             for flow in next_flows:
@@ -406,7 +406,7 @@ class BPMNExporter:
                         else:
                             oneof_effects.append(f"(and {' '.join(effect_predicates)})")
 
-                predicate = self.get_parallel_gateway_precondition(element.element_id, parallel_converging_gateways, get_outgoing)
+                predicate = self.get_parallel_gateway_precondition(gateway.element_id, parallel_converging_gateways, get_outgoing)
                 
                 domain += f'\t(:action {action_name}\n'
                 domain += f'\t\t:precondition (and {precondition})\n'
@@ -421,7 +421,7 @@ class BPMNExporter:
                 domain += f' (not {precondition}){predicate}\n'
                 domain += '\t)\n\n'
 
-                generated.add(element.element_id)
+                generated.add(gateway.element_id)
                 continue
 
             else:
