@@ -3,6 +3,9 @@ import os
 
 # TODO:
 # Incorrect gateway type (exlusive marked as parallel)
+# Exclusive gateways
+# Message flows
+# Already have to undo and correctly parameterize?
 
 class BPMNExporter:
 
@@ -38,13 +41,6 @@ class BPMNExporter:
         outgoing = {}
         incoming = {}
         domain = pddl_classes.Domain(self.diagram)
-
-        domain.create_action(
-            name = "test",
-            parameters = ['?t - task'],
-            preconditions = ['test'],
-            effects = ['test']
-        )
 
         def get_outgoing(element_id: str) -> list:
             return outgoing.get(element_id, [])
@@ -101,8 +97,13 @@ class BPMNExporter:
         for task in self.diagram.tasks:
             pass
 
-        for event in [event for event in self.diagram.events if event.type == 'endEvent']:
-            pass
+        for end_event in [event for event in self.diagram.events if event.type == 'endEvent']:
+            domain.create_action(
+                name = f"goal_{end_event.label}",
+                parameters = [],
+                preconditions = [f"{end_event.element_id}"],
+                effects = ["finished"]
+            )
 
         return domain, start_events
 

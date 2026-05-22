@@ -6,7 +6,7 @@ class Domain:
     def __init__(self, diagram: bpmn_diagram.Diagram):
         self.name = diagram.name
         self.objects = [element for element in diagram.events + diagram.tasks + diagram.gateways]
-        self.predicates = set()
+        self.predicates = []
         self.action_strs = []
 
     def create_action(self, name: str, parameters: list[str], preconditions: list[str], effects: list[str]):
@@ -17,7 +17,8 @@ class Domain:
             if predicate.startswith("not"):
                 predicate = predicate[4 : ].lstrip("(").rstrip(")")
 
-            self.predicates.add(predicate)
+            if predicate not in self.predicates:
+                self.predicates.append(predicate)
 
     def generate_file(self):
         actions = "\n\n".join(self.action_strs)
@@ -57,8 +58,8 @@ class Domain:
 
         return dedent(template).strip().format(
             name = self.name,
-            actions = actions,
-            predicates = predicates
+            predicates = predicates,
+            actions = actions
         )
     
 class Action:
