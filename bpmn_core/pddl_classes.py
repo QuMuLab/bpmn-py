@@ -32,6 +32,7 @@ class Domain:
                 :negative-preconditions
                 :conditional-effects
                 :equality
+                :adl
             )
 
             (:types

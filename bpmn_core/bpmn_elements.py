@@ -13,7 +13,7 @@ super_type_map = {
     "endEvent" : "EndEvent",
     "intermediateCatchEvent" : "IntermediateCatchEvent",
     "inclusiveGateway" : "InclusiveGateway",
-    "exclusiveGateway" : "exclusiveGateway",
+    "exclusiveGateway" : "ExclusiveGateway",
     "parallelGateway" : "ParallelGateway",
     "eventBasedGateway" : "EventBasedGateway"
 }
@@ -30,6 +30,7 @@ class gateway_type(Enum):
     eventBasedGateway = "eventBasedGateway"
 
 class task_type(Enum):
+    task = "Task"
     userTask = "userTask"
     serviceTask = "serviceTask"
     manualTask = "manualTask"
@@ -40,17 +41,28 @@ class task_type(Enum):
 
 class Element:
 
-    def __init__(self, label: str, element_id: str):
+    def __init__(self, label: str, element_id: str = None, element_type: str = None):
         self.label = label
-        
-        if not (self.is_event() or self.is_gateway()):
-            super_type = super_type_map.get(type(self).__name__, type(self).__name__)
 
-            while element_id in unique_ids:
-                element_id = f"{super_type}_" + "".join(random.choices(string.ascii_letters + string.digits, k = 7))
+        super_type = super_type_map.get(element_type, type(self).__name__)
+
+        if element_id is None or element_id in unique_ids:
+            element_id = self.generate_unique_id(super_type)
 
         self.element_id = element_id
         unique_ids.append(element_id)
+
+    def generate_unique_id(self, prefix: str):
+        element_id = f"{prefix}_" + "".join(
+            random.choices(string.ascii_letters + string.digits, k=7)
+        )
+
+        while element_id in unique_ids:
+            element_id = f"{prefix}_" + "".join(
+                random.choices(string.ascii_letters + string.digits, k=7)
+            )
+
+        return element_id
 
     def __str__(self):
         return f'{self.element_id} : {self.label}'
@@ -118,34 +130,20 @@ class Swimlane(Element):
 class Task(Element):
 
     def __init__(self, label: str, element_id: str, type: task_type):
-        super().__init__(label, element_id)
-        self.type = type
+        self.type = type.value
+        super().__init__(label, element_id, self.type)
 
 class Event(Element):
 
     def __init__(self, label: str, element_id: str, type: event_type):
-        super().__init__(label, element_id)
-        self.type = type
-        super_type = super_type_map.get(self.type, self.type)
-
-        while element_id in unique_ids:
-            element_id = f"{super_type}_" + "".join(random.choices(string.ascii_letters + string.digits, k = 7))
-
-        self.element_id = element_id
-        unique_ids.append(element_id)
+        self.type = type.value
+        super().__init__(label, element_id, self.type)
 
 class Gateway(Element):
 
     def __init__(self, label: str, element_id: str, type: gateway_type):
-        super().__init__(label, element_id)
-        self.type = type
-        super_type = super_type_map.get(self.type, self.type)
-
-        while element_id in unique_ids:
-            element_id = f"{super_type}_" + "".join(random.choices(string.ascii_letters + string.digits, k = 7))
-
-        self.element_id = element_id
-        unique_ids.append(element_id)
+        self.type = type.value
+        super().__init__(label, element_id, self.type)
 
 class SequenceFlow(Element):
 

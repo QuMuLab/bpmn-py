@@ -4,6 +4,7 @@
 import xml.etree.ElementTree as ET
 
 from bpmn_core import bpmn_diagram
+from bpmn_core.bpmn_elements import event_type, gateway_type, task_type
 
 task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "sendTask", "recieveTask", "businessRuleTask", "task"]
 event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
@@ -36,28 +37,28 @@ class BPMNParser:
                 element_id = swimlane.get("id")
             )
 
-        for task_type in task_types:
-            for task in self.root.findall(f".//bpmn:{task_type}", self.namespaces):
+        for type in task_types:
+            for task in self.root.findall(f".//bpmn:{type}", self.namespaces):
                 diagram.add_task(
                     label = self.clean_label(task.get("name")),
                     element_id = task.get("id"),
-                    type = task_type
+                    type = task_type[type]
                 )
 
-        for event_type in event_types:
-            for event in self.root.findall(f".//bpmn:{event_type}", self.namespaces):
+        for type in event_types:
+            for event in self.root.findall(f".//bpmn:{type}", self.namespaces):
                 diagram.add_event(
                     label = self.clean_label(event.get("name")),
                     element_id = event.get("id"),
-                    type = event_type
+                    type = event_type[type]
                 )
 
-        for gateway_type in gateway_types:
-            for gateway in self.root.findall(f".//bpmn:{gateway_type}", self.namespaces):
+        for type in gateway_types:
+            for gateway in self.root.findall(f".//bpmn:{type}", self.namespaces):
                 diagram.add_gateway(
                     label = self.clean_label(gateway.get("name")),
                     element_id = gateway.get("id"),
-                    type = gateway_type
+                    type = gateway_type[type]
                 )
         
         for seq_flow in self.root.findall(".//bpmn:sequenceFlow", self.namespaces):

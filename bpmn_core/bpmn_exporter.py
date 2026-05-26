@@ -37,7 +37,7 @@ class BPMNExporter:
         self.elements_by_id = {element.element_id: element for element in elements}
         self.outgoing = {}
         self.incoming = {}
-        start_events = [event for event in self.diagram.events if event.type == 'startEvent']
+        start_events = [event for event in self.diagram.events if event.type == "startEvent"]
 
         domain = pddl_classes.Domain(self.diagram, predicates = [
             "begun",

@@ -33,7 +33,7 @@ If holds: var3:0
 Execute: parallel_gateway_split parallelgateway_02fgrfq / SC / d=10
 
 If holds: var0:0
-Execute: advance_start_event startevent_1 parallelgateway_02fgrfq / SC / d=11
+Execute: advance_event startevent_1 parallelgateway_02fgrfq / SC / d=11
 
 If holds: var0:1 var1:1
 Execute: start_process startevent_1 / SC / d=12
