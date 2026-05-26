@@ -1,4 +1,4 @@
-(define (domain dispatch_of_goods)
+(define (domain order_pizza)
 
     (:requirements
         :typing

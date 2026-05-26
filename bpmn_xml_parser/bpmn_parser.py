@@ -7,7 +7,7 @@ from bpmn_core import bpmn_diagram
 
 task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "sendTask", "recieveTask", "businessRuleTask", "task"]
 event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
-gateway_types = ["eventBasedGateway", "exclusiveGateway", "parallelGateway", "inclusiveGateway"] # complex gateway
+gateway_types = ["eventBasedGateway", "exclusiveGateway", "parallelGateway", "inclusiveGateway"]
 
 class BPMNParser:
     

@@ -3,6 +3,7 @@ from textwrap import indent, dedent
 from re import sub
 
 class Domain:
+    
     def __init__(self, diagram: bpmn_diagram.Diagram, predicates: list[str]):
         self.name = diagram.name
         self.objects = [element for element in diagram.events + diagram.tasks + diagram.gateways]

@@ -2,21 +2,21 @@
     (:domain dispatch_of_goods)
 
     (:objects
-		StartEvent_1 - startEvent
-		EndEvent_1fx9yp3 - endEvent
-		Task_12j0pib - task
-		Task_0jsoxba - task
-		Task_0vaxgaa - task
-		Task_0e6hvnj - task
-		Task_0s79ile - task
-		Task_05ftug5 - task
-		Task_0sl26uo - task
-		ExclusiveGateway_1mpgzhg - exclusiveGateway
-		ExclusiveGateway_1ouv9kf - exclusiveGateway
-		ParallelGateway_02fgrfq - parallelGateway
-		ExclusiveGateway_0z5sib0 - parallelGateway
-		InclusiveGateway_0p2e5vq - inclusiveGateway
-		InclusiveGateway_1dgb4sg - inclusiveGateway
+		startEvent_z1M3YlR - startEvent
+		endEvent_p8AcLZp - endEvent
+		task_Tpqs68K - task
+		task_BlAsWkw - task
+		task_eNLN1Qa - task
+		task_mUk0fAo - task
+		task_GZUDtgp - task
+		task_tK74ZOt - task
+		task_DJfv7Na - task
+		exclusiveGateway_WkKJIgL - exclusiveGateway
+		exclusiveGateway_qji6rCD - exclusiveGateway
+		parallelGateway_A2PIquB - parallelGateway
+		parallelGateway_iij1lFV - parallelGateway
+		inclusiveGateway_nPWwbaI - inclusiveGateway
+		inclusiveGateway_oI0DsQF - inclusiveGateway
     )
 
     (:init
@@ -37,7 +37,6 @@
 		(connected Task_05ftug5 ExclusiveGateway_0z5sib0)
 		(connected ExclusiveGateway_0z5sib0 Task_0sl26uo)
 		(connected Task_0sl26uo EndEvent_1fx9yp3)
-		(paired_inclusive InclusiveGateway_0p2e5vq InclusiveGateway_1dgb4sg)
     )
 
     (:goal

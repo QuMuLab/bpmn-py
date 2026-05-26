@@ -1,13 +1,14 @@
-from bpmn_core import bpmn_diagram, bpmn_elements
+from bpmn_core import bpmn_diagram, bpmn_elements, pddl_classes
 import os
 
-from . import pddl_classes
-
 # TODO:
-# Test
-# Message flows
-# Boundary events & intermediate throw events
-# Export to xml (xml to graph)
+# Message flows - meeting
+# Boundary events & intermediate throw events - meeting
+# Export to xml (xml to graph) - meeting
+
+# Problem files - start events
+# Hard coded problem section
+# Oneof
 
 class BPMNExporter:
 
@@ -45,6 +46,10 @@ class BPMNExporter:
             "active ?e - element",
             "completed ?e - element",
             "connected ?from - element ?to - element",
+
+            "parallel_split ?g - parallelGateway",
+            "parallel_join ?g - parallelGateway",
+            "parallel_join_pair ?g - parallelGateway ?a - element ?b - element",
 
             "at_least_one_branch ?g - inclusiveGateway",
             "branch_started ?g - inclusiveGateway ?e - element",
@@ -93,19 +98,8 @@ class BPMNExporter:
         )
 
         domain.create_action(
-            name = "advance_start_event",
-            parameters = ["?from - startEvent", "?to - element"],
-            preconditions = ["active ?from", "connected ?from ?to"],
-            effects = [
-                "not (active ?from)",
-                "completed ?from",
-                "active ?to"
-            ]
-        )
-
-        domain.create_action(
-            name = "advance_intermediate_event",
-            parameters = ["?from - intermediateCatchEvent", "?to - element"],
+            name = "advance_event",
+            parameters = ["?from - event", "?to - element"],
             preconditions = ["active ?from", "connected ?from ?to"],
             effects = [
                 "not (active ?from)",
@@ -118,20 +112,28 @@ class BPMNExporter:
             name = "exclusive_gateway_choose",
             parameters = ["?g - exclusiveGateway", "?to - element"],
             preconditions = ["active ?g", "connected ?g ?to"],
-            effects = ["not (active ?g)", "active ?to", "completed ?g"]
+            effects = [
+                "not (active ?g)", 
+                "active ?to", 
+                "completed ?g"
+            ]
         )
 
         domain.create_action(
             name = "event_based_gateway_choose",
             parameters = ["?g - eventBasedGateway", "?to - element"],
             preconditions = ["active ?g", "connected ?g ?to"],
-            effects = ["not (active ?g)", "active ?to", "completed ?g"]
+            effects = [
+                "not (active ?g)", 
+                "active ?to", 
+                "completed ?g"
+            ]
         )
 
         domain.create_action(
             name = "parallel_gateway_split",
             parameters = ["?g - parallelGateway"],
-            preconditions = ["active ?g"],
+            preconditions = ["active ?g", "parallel_split ?g"],
             effects = [
                 "not (active ?g)",
                 "forall (?to - element) (when (connected ?g ?to) (active ?to))",
@@ -141,14 +143,19 @@ class BPMNExporter:
 
         domain.create_action(
             name = "parallel_gateway_join",
-            parameters = ["?g - parallelGateway", "?to - element"],
+            parameters = ["?g - parallelGateway", "?a - element", "?b - element", "?to - element"],
             preconditions = [
+                "active ?g",
+                "parallel_join ?g",
+                "parallel_join_pair ?g ?a ?b",
                 "connected ?g ?to",
-                "forall (?from - element) (imply (connected ?from ?g) (active ?from))"
+                "completed ?a",
+                "completed ?b"
             ],
             effects = [
-                "active ?to",
-                "completed ?g"
+                "not (active ?g)",
+                "completed ?g",
+                "active ?to"
             ]
         )
 
@@ -186,11 +193,11 @@ class BPMNExporter:
                 "active ?join",
                 "connected ?join ?to",
                 "at_least_one_branch ?split",
-                "forall (?branch - element) (imply (branch_started ?split ?branch) (completed ?branch))"
+                "forall (?branch - element) (or (not (branch_started ?split ?branch)) (completed ?branch))"
             ],
             effects = [
                 "not (active ?join)",
-                "completed ?g",
+                "completed ?join",
                 "active ?to",
                 "not (at_least_one_branch ?split)",
                 "forall (?branch - element) (when (branch_started ?split ?branch) (not (branch_started ?split ?branch)))"
@@ -216,7 +223,23 @@ class BPMNExporter:
             ]
             goals = ["finished"]
             connections = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows ]
-            inclusive_pairs = [f"paired_inclusive {split_id} {join_id}" for split_id, join_id in inclusive_pairs.items()]
+            inclusive_pair_facts = [f"paired_inclusive {split_id} {join_id}" for split_id, join_id in inclusive_pairs.items()]
+            parallel_gateway_types = []
+            parallel_join_pairs = []
+
+            for gateway in self.diagram.gateways:
+                if gateway.type == "parallelGateway":
+                    n_incoming = len(self.get_incoming(gateway.element_id))
+                    n_outgoing = len(self.get_outgoing(gateway.element_id))
+
+                    if n_incoming == 1 and n_outgoing > 1:
+                        parallel_gateway_types.append(f"parallel_split {gateway.element_id}")
+
+                    elif n_incoming == 2 and n_outgoing == 1: # hard coded for two
+                        parallel_gateway_types.append(f"parallel_join {gateway.element_id}")
+
+                        incoming = self.get_incoming(gateway.element_id)
+                        parallel_join_pairs.append(f"parallel_join_pair {gateway.element_id} {incoming[0]} {incoming[1]}") # for 2
 
             problem = pddl_classes.Problem(
                 domain, 
@@ -224,7 +247,7 @@ class BPMNExporter:
                 count, 
                 objects, 
                 goals, 
-                connections + inclusive_pairs
+                connections + inclusive_pair_facts + parallel_gateway_types + parallel_join_pairs
             )
 
             problems.append(problem)
