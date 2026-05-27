@@ -10,7 +10,8 @@
 
     (:types
         element
-        task event gateway - element
+        task_or_event gateway - element
+        task event - task_or_event
         userTask serviceTask manualTask scriptTask sendTask recieveTask businessRuleTask - task
         startEvent endEvent intermediateCatchEvent - event
         eventBasedGateway exclusiveGateway parallelGateway inclusiveGateway - gateway
@@ -22,13 +23,6 @@
 		(active ?e - element)
 		(completed ?e - element)
 		(connected ?from - element ?to - element)
-		(parallel_split ?g - parallelGateway)
-		(parallel_join ?g - parallelGateway)
-		(parallel_join_branch ?g - parallelGateway ?branch - element)
-		(parallel_branch_started ?split - parallelGateway ?branch - element)
-		(at_least_one_branch ?g - inclusiveGateway)
-		(inclusive_branch_started ?g - inclusiveGateway ?e - element)
-		(paired_inclusive ?split - inclusiveGateway ?join - inclusiveGateway)
     )
 
 	(:action start_process
@@ -45,8 +39,8 @@
 	    )
 	)
 
-	(:action advance_task
-	    :parameters (?from - task ?to - element)
+	(:action advance_from_task_or_event
+	    :parameters (?from - task_or_event ?to - element)
 
 	    :precondition (and
 			(active ?from)
@@ -60,22 +54,7 @@
 	    )
 	)
 
-	(:action advance_event
-	    :parameters (?from - event ?to - element)
-
-	    :precondition (and
-			(active ?from)
-			(connected ?from ?to)
-	    )
-
-	    :effect (and
-			(not (active ?from))
-			(completed ?from)
-			(active ?to)
-	    )
-	)
-
-	(:action exclusive_gateway_fire_ExclusiveGateway_1mpgzhg
+	(:action advance_from_ExclusiveGateway_1mpgzhg
 	    :parameters ()
 
 	    :precondition (and
@@ -92,7 +71,53 @@
 	    )
 	)
 
-	(:action inclusive_gateway_fire_InclusiveGateway_0p2e5vq
+	(:action advance_from_ExclusiveGateway_1ouv9kf
+	    :parameters ()
+
+	    :precondition (and
+			(active ExclusiveGateway_1ouv9kf)
+	    )
+
+	    :effect (and
+			(not (active ExclusiveGateway_1ouv9kf))
+			(completed ExclusiveGateway_1ouv9kf)
+			(active ParallelGateway_0z5sib0)
+	    )
+	)
+
+	(:action advance_from_ParallelGateway_02fgrfq
+	    :parameters ()
+
+	    :precondition (and
+			(active ParallelGateway_02fgrfq)
+			(completed StartEvent_1)
+	    )
+
+	    :effect (and
+			(not (active ParallelGateway_02fgrfq))
+			(completed ParallelGateway_02fgrfq)
+			(active Task_0vaxgaa)
+			(active Task_05ftug5)
+	    )
+	)
+
+	(:action advance_from_ParallelGateway_0z5sib0
+	    :parameters ()
+
+	    :precondition (and
+			(active ParallelGateway_0z5sib0)
+			(completed ExclusiveGateway_1ouv9kf)
+			(completed Task_05ftug5)
+	    )
+
+	    :effect (and
+			(not (active ParallelGateway_0z5sib0))
+			(completed ParallelGateway_0z5sib0)
+			(active Task_0sl26uo)
+	    )
+	)
+
+	(:action advance_from_InclusiveGateway_0p2e5vq
 	    :parameters ()
 
 	    :precondition (and
@@ -102,90 +127,32 @@
 	    :effect (and
 			(not (active InclusiveGateway_0p2e5vq))
 			(completed InclusiveGateway_0p2e5vq)
-			(at_least_one_branch InclusiveGateway_0p2e5vq)
 			(oneof
 				(and
-					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_12j0pib)
 					(active Task_12j0pib)
 				)
 				(and
-					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_0jsoxba)
 					(active Task_0jsoxba)
 				)
 				(and
-					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_12j0pib)
 					(active Task_12j0pib)
-					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_0jsoxba)
 					(active Task_0jsoxba)
 				)
 			)
 	    )
 	)
 
-	(:action inclusive_gateway_join
-	    :parameters (?split - inclusiveGateway ?join - inclusiveGateway ?to - element)
+	(:action advance_from_InclusiveGateway_1dgb4sg
+	    :parameters ()
 
 	    :precondition (and
-			(paired_inclusive ?split ?join)
-			(active ?join)
-			(connected ?join ?to)
-			(at_least_one_branch ?split)
-			(forall (?branch - element) (or (not (inclusive_branch_started ?split ?branch)) (completed ?branch)))
+			(active InclusiveGateway_1dgb4sg)
 	    )
 
 	    :effect (and
-			(not (active ?join))
-			(completed ?join)
-			(active ?to)
-			(not (at_least_one_branch ?split))
-			(forall (?branch - element) (when (inclusive_branch_started ?split ?branch) (not (inclusive_branch_started ?split ?branch))))
-	    )
-	)
-
-	(:action event_based_gateway_choose
-	    :parameters (?g - eventBasedGateway ?to - element)
-
-	    :precondition (and
-			(active ?g)
-			(connected ?g ?to)
-	    )
-
-	    :effect (and
-			(not (active ?g))
-			(active ?to)
-			(completed ?g)
-	    )
-	)
-
-	(:action parallel_gateway_split
-	    :parameters (?g - parallelGateway)
-
-	    :precondition (and
-			(active ?g)
-			(parallel_split ?g)
-	    )
-
-	    :effect (and
-			(not (active ?g))
-			(forall (?to - element) (when (connected ?g ?to) (and (active ?to) (parallel_branch_started ?g ?to))))
-			(completed ?g)
-	    )
-	)
-
-	(:action parallel_gateway_join
-	    :parameters (?g - parallelGateway ?to - element)
-
-	    :precondition (and
-			(active ?g)
-			(parallel_join ?g)
-			(connected ?g ?to)
-			(forall (?branch - element) (or (not (parallel_join_branch ?g ?branch)) (completed ?branch)))
-	    )
-
-	    :effect (and
-			(not (active ?g))
-			(completed ?g)
-			(active ?to)
+			(not (active InclusiveGateway_1dgb4sg))
+			(completed InclusiveGateway_1dgb4sg)
+			(active ExclusiveGateway_1ouv9kf)
 	    )
 	)
 

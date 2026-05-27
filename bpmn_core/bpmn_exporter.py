@@ -10,9 +10,8 @@ import os
 
 # Problem files - start events
 # Customizable event based
-# Fix forall formatting
-# Clean up precondtions and effects ordering
-# Clean up redundant predicates 
+# Finished inclusive and exclusive join actions
+# Add generate parallel conditions and effects functions
 
 # Model phd pathway -> mermaid
 
@@ -22,8 +21,8 @@ class BPMNExporter:
         self.diagram = diagram
     
     def create_pddl(self):
-        pddl_domain, start_events, inclusive_pairs = self.generate_pddl_domain()
-        pddl_problems = self.generate_pddl_problems(pddl_domain, start_events, inclusive_pairs)
+        pddl_domain, start_events = self.generate_pddl_domain()
+        pddl_problems = self.generate_pddl_problems(pddl_domain, start_events)
 
         output_folder = os.path.join(os.getcwd(), f"output/{self.diagram.name}")
         os.makedirs(output_folder, exist_ok = True)
@@ -51,16 +50,7 @@ class BPMNExporter:
 
             "active ?e - element",
             "completed ?e - element",
-            "connected ?from - element ?to - element",
-
-            "parallel_split ?g - parallelGateway", #
-            "parallel_join ?g - parallelGateway", #
-            "parallel_join_branch ?g - parallelGateway ?branch - element", #
-            "parallel_branch_started ?split - parallelGateway ?branch - element", #
-
-            "at_least_one_branch ?g - inclusiveGateway", #
-            "inclusive_branch_started ?g - inclusiveGateway ?e - element", # 
-            "paired_inclusive ?split - inclusiveGateway ?join - inclusiveGateway" #
+            "connected ?from - element ?to - element"
         ])
     
         for msg_flow in self.diagram.msg_flows:
@@ -84,8 +74,6 @@ class BPMNExporter:
             self.outgoing.setdefault(source, []).append(target)
             self.incoming.setdefault(target, []).append(source)
 
-        inclusive_pairs = self.map_inclusive_gateway_pairs(start_events)
-
         domain.create_action(
             name = "start_process",
             parameters = ["?e - startEvent"],
@@ -94,8 +82,8 @@ class BPMNExporter:
         )
 
         domain.create_action(
-            name = "advance_task",
-            parameters = ["?from - task", "?to - element"],
+            name = "advance_from_task_or_event",
+            parameters = ["?from - task_or_event", "?to - element"],
             preconditions = ["active ?from", "connected ?from ?to"],
             effects = [
                 "not (active ?from)", 
@@ -104,24 +92,18 @@ class BPMNExporter:
             ]
         )
 
-        domain.create_action(
-            name = "advance_event",
-            parameters = ["?from - event", "?to - element"],
-            preconditions = ["active ?from", "connected ?from ?to"],
-            effects = [
-                "not (active ?from)",
-                "completed ?from",
-                "active ?to"
-            ]
-        )
-
         for gateway in self.diagram.gateways:
-            if gateway.type == "exclusiveGateway":
-                n_outgoing = len(self.get_outgoing(gateway.element_id))
+            incomings = self.get_incoming(gateway.element_id)
+            outgoings = self.get_outgoing(gateway.element_id)
 
-                if n_outgoing > 1:
+            n_incoming = len(incomings)
+            n_outgoing = len(outgoings)
+        
+            if gateway.type == "exclusiveGateway":
+
+                if n_incoming == 1 and n_outgoing > 1:
                     domain.create_action(
-                        name = f"advance_{gateway.element_id}",
+                        name = f"advance_from_{gateway.element_id}",
                         parameters = [],
                         preconditions = [f"active {gateway.element_id}"],
                         effects = [
@@ -131,83 +113,82 @@ class BPMNExporter:
                         ]
                     )
 
+                elif n_incoming > 1 and n_outgoing == 1: # 
+                     domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = [f"active {gateway.element_id}"], # need to track which branch is triggered in the split and check if its done, or maybe not? shouldnt be possible for a non chosen branch to be active 
+                        effects = [
+                            f"not (active {gateway.element_id})",
+                            f"completed {gateway.element_id}",
+                            f"active {self.get_outgoing(gateway.element_id)[0]}"
+                        ]
+                    )                   
+
             elif gateway.type == "inclusiveGateway":
-                n_incoming = len(self.get_incoming(gateway.element_id))
-                n_outgoing = len(self.get_outgoing(gateway.element_id))
 
                 if n_incoming == 1 and n_outgoing > 1:
                     domain.create_action(
-                        name = f"advance_{gateway.element_id}",
+                        name = f"advance_from_{gateway.element_id}",
                         parameters = [],
                         preconditions = [f"active {gateway.element_id}"],
                         effects = [
                             f"not (active {gateway.element_id})",
                             f"completed {gateway.element_id}",
-                            f"at_least_one_branch {gateway.element_id}",
                             self.generate_inclusive_gateway_effects(gateway.element_id)
                         ]
                     )
 
-        domain.create_action(
-            name = "inclusive_gateway_join",
-            parameters = [
-                "?split - inclusiveGateway",
-                "?join - inclusiveGateway",
-                "?to - element"
-            ],
-            preconditions = [
-                "paired_inclusive ?split ?join",
-                "active ?join",
-                "connected ?join ?to",
-                "at_least_one_branch ?split",
-                "forall (?branch - element) (or (not (inclusive_branch_started ?split ?branch)) (completed ?branch))"
-            ],
-            effects = [
-                "not (active ?join)",
-                "completed ?join",
-                "active ?to",
-                "not (at_least_one_branch ?split)",
-                "forall (?branch - element) (when (inclusive_branch_started ?split ?branch) (not (inclusive_branch_started ?split ?branch)))"
-            ]
-        )
+                elif n_incoming > 1 and n_outgoing == 1: # 
+                    domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = [f"active {gateway.element_id}"], # need to track which branches are trigged in the split
+                        effects = [
+                            f"not (active {gateway.element_id})",
+                            f"completed {gateway.element_id}",
+                            f"active {self.get_outgoing(gateway.element_id)[0]}"
+                        ]
+                    )     
 
-        domain.create_action(
-            name = "event_based_gateway_choose",
-            parameters = ["?g - eventBasedGateway", "?to - element"],
-            preconditions = ["active ?g", "connected ?g ?to"],
-            effects = [
-                "not (active ?g)", 
-                "active ?to", 
-                "completed ?g"
-            ]
-        )
+            elif gateway.type == "parallelGateway":
 
-        domain.create_action(
-            name = "parallel_gateway_split",
-            parameters = ["?g - parallelGateway", "?to - element"],
-            preconditions = ["active ?g", "parallel_split ?g"],
-            effects = [
-                "not (active ?g)",
-                "forall (?to - element) (when (connected ?g ?to) (and (active ?to) (parallel_branch_started ?g ?to)))",
-                "completed ?g"
-            ]
-        )
+                if n_incoming == 1 and n_outgoing > 1:
+                    domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = [f"active {gateway.element_id}", f"completed {incomings[0]}"],
+                        effects = [
+                            f"not (active {gateway.element_id})",
+                            f"completed {gateway.element_id}",
+                        ] + [f"active {outgoing}" for outgoing in outgoings] # fix
+                    )
 
-        domain.create_action(
-            name = "parallel_gateway_join",
-            parameters = ["?g - parallelGateway", "?to - element"],
-            preconditions = [
-                "active ?g",
-                "parallel_join ?g",
-                "connected ?g ?to",
-                "forall (?branch - element) (or (not (parallel_join_branch ?g ?branch)) (completed ?branch))"
-            ],
-            effects = [
-                "not (active ?g)",
-                "completed ?g",
-                "active ?to"
-            ]
-        )
+                elif n_incoming > 1 and n_outgoing == 1:
+                    preconditions = [f"active {gateway.element_id}"] + [f"completed {incoming}" for incoming in incomings]
+
+                    domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = preconditions,
+                        effects = [
+                            f"not (active {gateway.element_id})",
+                            f"completed {gateway.element_id}",
+                            f"active {outgoings[0]}"
+                        ] 
+                    )
+
+            elif gateway.type == "eventBasedGateway":
+                domain.create_action(
+                    name = f"advance_from_{gateway.element_id}",
+                    parameters = ["?g - eventBasedGateway", "?to - element"],
+                    preconditions = ["active ?g", "connected ?g ?to"],
+                    effects = [
+                        "not (active ?g)", 
+                        "active ?to", 
+                        "completed ?g"
+                    ]
+                )
 
         domain.create_action(
             name = "end_process",
@@ -216,9 +197,9 @@ class BPMNExporter:
             effects = ["finished"]
         )
 
-        return domain, start_events, inclusive_pairs
+        return domain, start_events
 
-    def generate_pddl_problems(self, domain: pddl_classes.Domain, start_events: list[bpmn_elements.Event], inclusive_pairs: dict[str, str]) -> list[pddl_classes.Problem]:
+    def generate_pddl_problems(self, domain: pddl_classes.Domain, start_events: list[bpmn_elements.Event]) -> list[pddl_classes.Problem]:
         problems = []
 
         for count, start_event in enumerate(start_events):
@@ -228,31 +209,14 @@ class BPMNExporter:
             ]
             goals = ["finished"]
             connections = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows ]
-            inclusive_pair_facts = [f"paired_inclusive {split_id} {join_id}" for split_id, join_id in inclusive_pairs.items()]
-            parallel_gateway_types = []
-            parallel_join_pairs = []
-
-            for gateway in self.diagram.gateways:
-                if gateway.type == "parallelGateway":
-                    n_incoming = len(self.get_incoming(gateway.element_id))
-                    n_outgoing = len(self.get_outgoing(gateway.element_id))
-
-                    if n_incoming == 1 and n_outgoing > 1:
-                        parallel_gateway_types.append(f"parallel_split {gateway.element_id}")
-
-                    elif n_incoming > 1 and n_outgoing == 1:
-                        parallel_gateway_types.append(f"parallel_join {gateway.element_id}")
-
-                        for incoming_id in self.get_incoming(gateway.element_id):
-                            parallel_join_pairs.append(f"parallel_join_branch {gateway.element_id} {incoming_id}")
 
             problem = pddl_classes.Problem(
-                domain, 
-                start_event, 
-                count, 
-                objects, 
+                domain,
+                start_event,
+                count,
+                objects,
                 goals, 
-                connections + inclusive_pair_facts + parallel_gateway_types + parallel_join_pairs
+                connections
             )
 
             problems.append(problem)
@@ -325,10 +289,7 @@ class BPMNExporter:
                 effects = []
 
                 for target_id in subset:
-                    effects.extend([
-                        f"(inclusive_branch_started {gateway_id} {target_id})",
-                        f"(active {target_id})"
-                    ])
+                    effects.append(f"(active {target_id})")
 
                 subset_choices.append("\t(and\n\t\t" + "\n\t\t".join(effects) + "\n\t)")
 

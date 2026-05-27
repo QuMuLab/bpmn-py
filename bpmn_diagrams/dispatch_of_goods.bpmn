@@ -9,7 +9,7 @@
         <bpmn:flowNodeRef>Task_05ftug5</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_0sl26uo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_1fx9yp3</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0z5sib0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ParallelGateway_0z5sib0</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1ocseyo" name="Secretary">
         <bpmn:flowNodeRef>InclusiveGateway_0p2e5vq</bpmn:flowNodeRef>
@@ -86,7 +86,7 @@
     <bpmn:endEvent id="EndEvent_1fx9yp3" name="Shipment&#10;prepared">
       <bpmn:incoming>SequenceFlow_0v64x8b</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:parallelGateway id="ExclusiveGateway_0z5sib0">
+    <bpmn:parallelGateway id="ParallelGateway_0z5sib0">
       <bpmn:incoming>SequenceFlow_035vf60</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0b2nw5c</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_06kfaev</bpmn:outgoing>
@@ -104,9 +104,9 @@
     <bpmn:sequenceFlow id="SequenceFlow_1xv6wk4" name="yes" sourceRef="ExclusiveGateway_1mpgzhg" targetRef="Task_0e6hvnj" />
     <bpmn:sequenceFlow id="SequenceFlow_1pq8ub3" sourceRef="Task_0e6hvnj" targetRef="Task_0s79ile" />
     <bpmn:sequenceFlow id="SequenceFlow_0ajhekx" sourceRef="Task_0s79ile" targetRef="ExclusiveGateway_1ouv9kf" />
-    <bpmn:sequenceFlow id="SequenceFlow_035vf60" sourceRef="ExclusiveGateway_1ouv9kf" targetRef="ExclusiveGateway_0z5sib0" />
-    <bpmn:sequenceFlow id="SequenceFlow_0b2nw5c" sourceRef="Task_05ftug5" targetRef="ExclusiveGateway_0z5sib0" />
-    <bpmn:sequenceFlow id="SequenceFlow_06kfaev" sourceRef="ExclusiveGateway_0z5sib0" targetRef="Task_0sl26uo" />
+    <bpmn:sequenceFlow id="SequenceFlow_035vf60" sourceRef="ExclusiveGateway_1ouv9kf" targetRef="ParallelGateway_0z5sib0" />
+    <bpmn:sequenceFlow id="SequenceFlow_0b2nw5c" sourceRef="Task_05ftug5" targetRef="ParallelGateway_0z5sib0" />
+    <bpmn:sequenceFlow id="SequenceFlow_06kfaev" sourceRef="ParallelGateway_0z5sib0" targetRef="Task_0sl26uo" />
     <bpmn:sequenceFlow id="SequenceFlow_0v64x8b" sourceRef="Task_0sl26uo" targetRef="EndEvent_1fx9yp3" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -186,7 +186,7 @@
           <dc:Bounds x="1313" y="725" width="47" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1eflc4k_di" bpmnElement="ExclusiveGateway_0z5sib0">
+      <bpmndi:BPMNShape id="Gateway_1eflc4k_di" bpmnElement="ParallelGateway_0z5sib0">
         <dc:Bounds x="1053" y="682" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1069" y="739" width="18" height="14" />

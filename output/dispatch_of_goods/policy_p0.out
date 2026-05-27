@@ -1,24 +1,51 @@
 
-If holds: var34:0
+If holds: var30:0
 Execute: goal / SC / d=0
 
-If holds: var33:0
+If holds: var29:0
 Execute: end_process endevent_1fx9yp3 / SC / d=1
 
-If holds: var31:0
-Execute: advance_task task_0sl26uo endevent_1fx9yp3 / SC / d=2
+If holds: var27:0
+Execute: advance_from_task_or_event task_0sl26uo endevent_1fx9yp3 / SC / d=2
 
-If holds: var29:0
-Execute: parallel_gateway_join exclusivegateway_0z5sib0 task_0sl26uo / SC / d=3
+If holds: var8:0 var24:0 var25:0
+Execute: advance_from_parallelgateway_0z5sib0 / SC / d=3
 
-If holds: var9:0
-Execute: advance_task task_05ftug5 exclusivegateway_0z5sib0 / SC / d=4
+If holds: var7:0 var24:0
+Execute: advance_from_task_or_event task_05ftug5 parallelgateway_0z5sib0 / SC / d=4
 
-If holds: var3:0
-Execute: parallel_gateway_split parallelgateway_02fgrfq / SC / d=5
+If holds: var7:0 var23:0
+Execute: advance_from_exclusivegateway_1ouv9kf / SC / d=5
+
+If holds: var7:0 var21:0
+Execute: advance_from_inclusivegateway_1dgb4sg / SC / d=6
+
+If holds: var7:0 var13:0
+Execute: advance_from_task_or_event task_0s79ile exclusivegateway_1ouv9kf / SC / d=6
+
+If holds: var7:0 var17:0
+Execute: advance_from_task_or_event task_12j0pib inclusivegateway_1dgb4sg / SC / d=7
+
+If holds: var7:0 var19:0
+Execute: advance_from_task_or_event task_0jsoxba inclusivegateway_1dgb4sg / SC / d=7
+
+If holds: var7:0 var11:0
+Execute: advance_from_task_or_event task_0e6hvnj task_0s79ile / SC / d=7
+
+If holds: var7:0 var15:0
+Execute: advance_from_inclusivegateway_0p2e5vq / SC / d=8
+
+If holds: var7:0 var9:0
+Execute: advance_from_exclusivegateway_1mpgzhg / SC / d=8
+
+If holds: var5:0 var7:0
+Execute: advance_from_task_or_event task_0vaxgaa exclusivegateway_1mpgzhg / SC / d=9
+
+If holds: var2:0 var3:0
+Execute: advance_from_parallelgateway_02fgrfq / SC / d=10
 
 If holds: var0:0
-Execute: advance_event startevent_1 parallelgateway_02fgrfq / SC / d=6
+Execute: advance_from_task_or_event startevent_1 parallelgateway_02fgrfq / SC / d=11
 
 If holds: var0:1 var1:1
-Execute: start_process startevent_1 / SC / d=7
+Execute: start_process startevent_1 / SC / d=12

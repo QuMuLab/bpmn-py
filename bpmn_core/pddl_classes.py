@@ -37,7 +37,8 @@ class Domain:
 
             (:types
                 element
-                task event gateway - element
+                task_or_event gateway - element
+                task event - task_or_event
                 userTask serviceTask manualTask scriptTask sendTask recieveTask businessRuleTask - task
                 startEvent endEvent intermediateCatchEvent - event
                 eventBasedGateway exclusiveGateway parallelGateway inclusiveGateway - gateway

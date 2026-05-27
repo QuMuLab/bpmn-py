@@ -14,7 +14,7 @@
 		ExclusiveGateway_1mpgzhg - exclusiveGateway
 		ExclusiveGateway_1ouv9kf - exclusiveGateway
 		ParallelGateway_02fgrfq - parallelGateway
-		ExclusiveGateway_0z5sib0 - parallelGateway
+		ParallelGateway_0z5sib0 - parallelGateway
 		InclusiveGateway_0p2e5vq - inclusiveGateway
 		InclusiveGateway_1dgb4sg - inclusiveGateway
     )
@@ -33,15 +33,10 @@
 		(connected ExclusiveGateway_1mpgzhg Task_0e6hvnj)
 		(connected Task_0e6hvnj Task_0s79ile)
 		(connected Task_0s79ile ExclusiveGateway_1ouv9kf)
-		(connected ExclusiveGateway_1ouv9kf ExclusiveGateway_0z5sib0)
-		(connected Task_05ftug5 ExclusiveGateway_0z5sib0)
-		(connected ExclusiveGateway_0z5sib0 Task_0sl26uo)
+		(connected ExclusiveGateway_1ouv9kf ParallelGateway_0z5sib0)
+		(connected Task_05ftug5 ParallelGateway_0z5sib0)
+		(connected ParallelGateway_0z5sib0 Task_0sl26uo)
 		(connected Task_0sl26uo EndEvent_1fx9yp3)
-		(paired_inclusive InclusiveGateway_0p2e5vq InclusiveGateway_1dgb4sg)
-		(parallel_split ParallelGateway_02fgrfq)
-		(parallel_join ExclusiveGateway_0z5sib0)
-		(parallel_join_branch ExclusiveGateway_0z5sib0 ExclusiveGateway_1ouv9kf)
-		(parallel_join_branch ExclusiveGateway_0z5sib0 Task_05ftug5)
     )
 
     (:goal
