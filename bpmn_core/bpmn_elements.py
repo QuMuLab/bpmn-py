@@ -30,7 +30,7 @@ class gateway_type(Enum):
     eventBasedGateway = "eventBasedGateway"
 
 class task_type(Enum):
-    task = "Task"
+    task = "task"
     userTask = "userTask"
     serviceTask = "serviceTask"
     manualTask = "manualTask"

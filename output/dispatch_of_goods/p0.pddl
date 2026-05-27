@@ -4,13 +4,13 @@
     (:objects
 		StartEvent_1 - startEvent
 		EndEvent_1fx9yp3 - endEvent
-		Task_12j0pib - Task
-		Task_0jsoxba - Task
-		Task_0vaxgaa - Task
-		Task_0e6hvnj - Task
-		Task_0s79ile - Task
-		Task_05ftug5 - Task
-		Task_0sl26uo - Task
+		Task_12j0pib - task
+		Task_0jsoxba - task
+		Task_0vaxgaa - task
+		Task_0e6hvnj - task
+		Task_0s79ile - task
+		Task_05ftug5 - task
+		Task_0sl26uo - task
 		ExclusiveGateway_1mpgzhg - exclusiveGateway
 		ExclusiveGateway_1ouv9kf - exclusiveGateway
 		ParallelGateway_02fgrfq - parallelGateway
@@ -40,7 +40,8 @@
 		(paired_inclusive InclusiveGateway_0p2e5vq InclusiveGateway_1dgb4sg)
 		(parallel_split ParallelGateway_02fgrfq)
 		(parallel_join ExclusiveGateway_0z5sib0)
-		(parallel_join_pair ExclusiveGateway_0z5sib0 ExclusiveGateway_1ouv9kf Task_05ftug5)
+		(parallel_join_branch ExclusiveGateway_0z5sib0 ExclusiveGateway_1ouv9kf)
+		(parallel_join_branch ExclusiveGateway_0z5sib0 Task_05ftug5)
     )
 
     (:goal

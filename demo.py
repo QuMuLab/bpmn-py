@@ -11,7 +11,7 @@ diagram = parser.parse()
 exporter = bpmn_exporter.BPMNExporter(diagram)
 exporter.create_pddl()
 
-diagram.print_elements()
+#diagram.print_elements()
 
 # 2. "Manually" create bpmn in python then export to xml or pddl
 

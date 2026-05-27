@@ -24,9 +24,10 @@
 		(connected ?from - element ?to - element)
 		(parallel_split ?g - parallelGateway)
 		(parallel_join ?g - parallelGateway)
-		(parallel_join_pair ?g - parallelGateway ?a - element ?b - element)
+		(parallel_join_branch ?g - parallelGateway ?branch - element)
+		(parallel_branch_started ?split - parallelGateway ?branch - element)
 		(at_least_one_branch ?g - inclusiveGateway)
-		(branch_started ?g - inclusiveGateway ?e - element)
+		(inclusive_branch_started ?g - inclusiveGateway ?e - element)
 		(paired_inclusive ?split - inclusiveGateway ?join - inclusiveGateway)
     )
 
@@ -74,18 +75,70 @@
 	    )
 	)
 
-	(:action exclusive_gateway_choose
-	    :parameters (?g - exclusiveGateway ?to - element)
+	(:action exclusive_gateway_fire_ExclusiveGateway_1mpgzhg
+	    :parameters ()
 
 	    :precondition (and
-			(active ?g)
-			(connected ?g ?to)
+			(active ExclusiveGateway_1mpgzhg)
 	    )
 
 	    :effect (and
-			(not (active ?g))
+			(not (active ExclusiveGateway_1mpgzhg))
+			(completed ExclusiveGateway_1mpgzhg)
+			(oneof
+				(active InclusiveGateway_0p2e5vq)
+				(active Task_0e6hvnj)
+			)
+	    )
+	)
+
+	(:action inclusive_gateway_fire_InclusiveGateway_0p2e5vq
+	    :parameters ()
+
+	    :precondition (and
+			(active InclusiveGateway_0p2e5vq)
+	    )
+
+	    :effect (and
+			(not (active InclusiveGateway_0p2e5vq))
+			(completed InclusiveGateway_0p2e5vq)
+			(at_least_one_branch InclusiveGateway_0p2e5vq)
+			(oneof
+				(and
+					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_12j0pib)
+					(active Task_12j0pib)
+				)
+				(and
+					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_0jsoxba)
+					(active Task_0jsoxba)
+				)
+				(and
+					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_12j0pib)
+					(active Task_12j0pib)
+					(inclusive_branch_started InclusiveGateway_0p2e5vq Task_0jsoxba)
+					(active Task_0jsoxba)
+				)
+			)
+	    )
+	)
+
+	(:action inclusive_gateway_join
+	    :parameters (?split - inclusiveGateway ?join - inclusiveGateway ?to - element)
+
+	    :precondition (and
+			(paired_inclusive ?split ?join)
+			(active ?join)
+			(connected ?join ?to)
+			(at_least_one_branch ?split)
+			(forall (?branch - element) (or (not (inclusive_branch_started ?split ?branch)) (completed ?branch)))
+	    )
+
+	    :effect (and
+			(not (active ?join))
+			(completed ?join)
 			(active ?to)
-			(completed ?g)
+			(not (at_least_one_branch ?split))
+			(forall (?branch - element) (when (inclusive_branch_started ?split ?branch) (not (inclusive_branch_started ?split ?branch))))
 	    )
 	)
 
@@ -114,77 +167,25 @@
 
 	    :effect (and
 			(not (active ?g))
-			(forall (?to - element) (when (connected ?g ?to) (active ?to)))
+			(forall (?to - element) (when (connected ?g ?to) (and (active ?to) (parallel_branch_started ?g ?to))))
 			(completed ?g)
 	    )
 	)
 
 	(:action parallel_gateway_join
-	    :parameters (?g - parallelGateway ?a - element ?b - element ?to - element)
+	    :parameters (?g - parallelGateway ?to - element)
 
 	    :precondition (and
 			(active ?g)
 			(parallel_join ?g)
-			(parallel_join_pair ?g ?a ?b)
 			(connected ?g ?to)
-			(completed ?a)
-			(completed ?b)
+			(forall (?branch - element) (or (not (parallel_join_branch ?g ?branch)) (completed ?branch)))
 	    )
 
 	    :effect (and
 			(not (active ?g))
 			(completed ?g)
 			(active ?to)
-	    )
-	)
-
-	(:action inclusive_gateway_choose_branch
-	    :parameters (?g - inclusiveGateway ?to - element)
-
-	    :precondition (and
-			(active ?g)
-			(connected ?g ?to)
-			(not (branch_started ?g ?to))
-	    )
-
-	    :effect (and
-			(active ?to)
-			(branch_started ?g ?to)
-			(at_least_one_branch ?g)
-	    )
-	)
-
-	(:action inclusive_gateway_finish_choices
-	    :parameters (?g - inclusiveGateway)
-
-	    :precondition (and
-			(active ?g)
-			(at_least_one_branch ?g)
-	    )
-
-	    :effect (and
-			(not (active ?g))
-			(completed ?g)
-	    )
-	)
-
-	(:action inclusive_gateway_join
-	    :parameters (?split - inclusiveGateway ?join - inclusiveGateway ?to - element)
-
-	    :precondition (and
-			(paired_inclusive ?split ?join)
-			(active ?join)
-			(connected ?join ?to)
-			(at_least_one_branch ?split)
-			(forall (?branch - element) (or (not (branch_started ?split ?branch)) (completed ?branch)))
-	    )
-
-	    :effect (and
-			(not (active ?join))
-			(completed ?join)
-			(active ?to)
-			(not (at_least_one_branch ?split))
-			(forall (?branch - element) (when (branch_started ?split ?branch) (not (branch_started ?split ?branch))))
 	    )
 	)
 
