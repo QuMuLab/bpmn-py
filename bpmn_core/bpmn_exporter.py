@@ -1,19 +1,9 @@
 from bpmn_core import bpmn_diagram, bpmn_elements, pddl_classes
 from itertools import combinations
-from textwrap import indent, dedent
 import os
 
 # TODO:
-# Message flows
-# Boundary events & intermediate throw events
-# Export to xml (xml to graph)
-
-# Problem files - start events
 # Customizable event based
-# Finished inclusive and exclusive join actions
-# Add generate parallel conditions and effects functions
-
-# Model phd pathway -> mermaid
 
 class BPMNExporter:
 
@@ -37,7 +27,7 @@ class BPMNExporter:
             with open(problem_file_path, "w") as file:
                 file.write(pddl_problem.generate_file())
 
-    def generate_pddl_domain(self) -> tuple[pddl_classes.Domain, list[bpmn_elements.Event]]:
+    def generate_pddl_domain(self) -> tuple[pddl_classes.Domain, list[bpmn_elements.Event], dict[str, str]]:
         elements = self.diagram.get_elements()
         self.elements_by_id = {element.element_id: element for element in elements}
         self.outgoing = {}
@@ -50,7 +40,7 @@ class BPMNExporter:
 
             "active ?e - element",
             "completed ?e - element",
-            "connected ?from - element ?to - element"
+            "connected ?from - element ?to - element",
         ])
     
         for msg_flow in self.diagram.msg_flows:
@@ -73,6 +63,17 @@ class BPMNExporter:
 
             self.outgoing.setdefault(source, []).append(target)
             self.incoming.setdefault(target, []).append(source)
+
+        inclusive_pairs = self.map_inclusive_gateway_pairs(start_events)
+        max_incoming = 0
+
+        for gateway in inclusive_pairs.values():
+            n_incoming = len(self.get_incoming(gateway))
+            if n_incoming > max_incoming:
+                max_incoming = n_incoming
+
+        for n in range(1, max_incoming + 1):
+            domain.predicates.append(f"inclusive_branch_{n} ?split - inclusiveGateway ?join - inclusiveGateway")
 
         domain.create_action(
             name = "start_process",
@@ -109,19 +110,19 @@ class BPMNExporter:
                         effects = [
                             f"not (active {gateway.element_id})",
                             f"completed {gateway.element_id}",
-                            self.generate_exclusive_gateway_effects(gateway.element_id)
+                            self.get_exclusive_split_effects(gateway.element_id)
                         ]
                     )
 
-                elif n_incoming > 1 and n_outgoing == 1: # 
+                elif n_incoming > 1 and n_outgoing == 1:
                      domain.create_action(
                         name = f"advance_from_{gateway.element_id}",
                         parameters = [],
-                        preconditions = [f"active {gateway.element_id}"], # need to track which branch is triggered in the split and check if its done, or maybe not? shouldnt be possible for a non chosen branch to be active 
+                        preconditions = [f"active {gateway.element_id}"],
                         effects = [
                             f"not (active {gateway.element_id})",
-                            f"completed {gateway.element_id}",
-                            f"active {self.get_outgoing(gateway.element_id)[0]}"
+                            f"active {outgoings[0]}",
+                            f"completed {gateway.element_id}"
                         ]
                     )                   
 
@@ -135,19 +136,22 @@ class BPMNExporter:
                         effects = [
                             f"not (active {gateway.element_id})",
                             f"completed {gateway.element_id}",
-                            self.generate_inclusive_gateway_effects(gateway.element_id)
+                            self.get_inclusive_split_effects(gateway.element_id, inclusive_pairs)
                         ]
                     )
 
-                elif n_incoming > 1 and n_outgoing == 1: # 
+                elif n_incoming > 1 and n_outgoing == 1:
                     domain.create_action(
                         name = f"advance_from_{gateway.element_id}",
                         parameters = [],
-                        preconditions = [f"active {gateway.element_id}"], # need to track which branches are trigged in the split
+                        preconditions = [
+                            f"active {gateway.element_id}",
+                            self.get_inclusive_join_preconditions(gateway.element_id, inclusive_pairs)
+                        ],
                         effects = [
                             f"not (active {gateway.element_id})",
-                            f"completed {gateway.element_id}",
-                            f"active {self.get_outgoing(gateway.element_id)[0]}"
+                            f"active {outgoings[0]}",
+                            f"completed {gateway.element_id}"
                         ]
                     )     
 
@@ -158,37 +162,46 @@ class BPMNExporter:
                         name = f"advance_from_{gateway.element_id}",
                         parameters = [],
                         preconditions = [f"active {gateway.element_id}", f"completed {incomings[0]}"],
-                        effects = [
-                            f"not (active {gateway.element_id})",
-                            f"completed {gateway.element_id}",
-                        ] + [f"active {outgoing}" for outgoing in outgoings] # fix
+                        effects = self.get_parallel_split_effects(gateway.element_id)
                     )
 
                 elif n_incoming > 1 and n_outgoing == 1:
-                    preconditions = [f"active {gateway.element_id}"] + [f"completed {incoming}" for incoming in incomings]
-
                     domain.create_action(
                         name = f"advance_from_{gateway.element_id}",
                         parameters = [],
-                        preconditions = preconditions,
+                        preconditions = self.get_parallel_join_preconditions(gateway.element_id),
                         effects = [
                             f"not (active {gateway.element_id})",
-                            f"completed {gateway.element_id}",
-                            f"active {outgoings[0]}"
+                            f"active {outgoings[0]}",
+                            f"completed {gateway.element_id}"
                         ] 
                     )
 
             elif gateway.type == "eventBasedGateway":
-                domain.create_action(
-                    name = f"advance_from_{gateway.element_id}",
-                    parameters = ["?g - eventBasedGateway", "?to - element"],
-                    preconditions = ["active ?g", "connected ?g ?to"],
-                    effects = [
-                        "not (active ?g)", 
-                        "active ?to", 
-                        "completed ?g"
-                    ]
-                )
+                
+                if n_incoming == 1 and n_outgoing > 1:
+                    domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = [f"active {gateway.element_id}"],
+                        effects = [
+                            f"not (active {gateway.element_id})", 
+                            f"completed {gateway.element_id}",
+                            self.get_event_based_split_effects(gateway.element_id)
+                        ]
+                    )
+                
+                elif n_incoming > 1 and n_outgoing == 1:
+                    domain.create_action(
+                        name = f"advance_from_{gateway.element_id}",
+                        parameters = [],
+                        preconditions = [f"active {gateway.element_id}"],
+                        effects = [
+                            f"not (active {gateway.element_id})", 
+                            f"active {outgoings[0]}", 
+                            f"completed {gateway.element_id}"
+                        ]
+                    )
 
         domain.create_action(
             name = "end_process",
@@ -202,21 +215,24 @@ class BPMNExporter:
     def generate_pddl_problems(self, domain: pddl_classes.Domain, start_events: list[bpmn_elements.Event]) -> list[pddl_classes.Problem]:
         problems = []
 
-        for count, start_event in enumerate(start_events):
+        for count, start_event in enumerate([None] + start_events):
             objects = [
                 f"{element.element_id} - {element.type}" 
                 for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways
             ]
             goals = ["finished"]
-            connections = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows ]
+            initials = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows]
+            
+            if start_event:
+                initials.append(f"active {start_event.element_id}")
 
             problem = pddl_classes.Problem(
-                domain,
-                start_event,
-                count,
-                objects,
-                goals, 
-                connections
+                domain = domain,
+                start_event = start_event,
+                problem_num = count,
+                objects = objects,
+                goals = goals, 
+                initials = initials
             )
 
             problems.append(problem)
@@ -264,14 +280,15 @@ class BPMNExporter:
                             split_id = stack.pop()
                             join_id = cur_id
                             result[split_id] = join_id
+                            result[join_id] = split_id
 
                 for target_id in self.get_outgoing(cur_id):
                     if target_id not in visited:
                         queue.append(target_id)
 
         return result
-    
-    def generate_exclusive_gateway_effects(self, gateway_id: str) -> str:
+
+    def get_exclusive_split_effects(self, gateway_id: str) -> str:
         outgoing = self.get_outgoing(gateway_id)
         choices = []
 
@@ -280,17 +297,101 @@ class BPMNExporter:
 
         return "oneof\n" + "\n".join(choices) + "\n"
     
-    def generate_inclusive_gateway_effects(self, gateway_id: str) -> str:
+    def get_inclusive_split_effects(self, gateway_id: str, inclusive_pairs: dict[str, str]) -> str:
         outgoing = self.get_outgoing(gateway_id)
         subset_choices = []
+        outgoing_counter_pairs = {}
+
+        for counter, element_id in enumerate(outgoing):
+            outgoing_counter_pairs[element_id] = f"(inclusive_branch_{counter + 1} {gateway_id} {inclusive_pairs[gateway_id]})"
 
         for r in range(1, len(outgoing) + 1):
             for subset in combinations(outgoing, r):
-                effects = []
+                counter_effects = [outgoing_counter_pairs[target_id] for target_id in subset]
+                active_effects = [f"(active {target_id})" for target_id in subset]
 
-                for target_id in subset:
-                    effects.append(f"(active {target_id})")
-
-                subset_choices.append("\t(and\n\t\t" + "\n\t\t".join(effects) + "\n\t)")
+                subset_choices.append("\t(and\n\t\t" + "\n\t\t".join(counter_effects + active_effects) + "\n\t)")
 
         return "oneof\n" + "\n".join(subset_choices) + "\n"
+    
+    def get_inclusive_join_preconditions(self, gateway_id: str, inclusive_pairs: dict[str, str]) -> str:
+        split_gateway = inclusive_pairs[gateway_id]
+        split_outgoing = self.get_outgoing(split_gateway)
+        join_incoming = self.get_incoming(gateway_id)
+        subset_choices = []
+        branch_order = {}
+
+        for counter, element_id in enumerate(split_outgoing):
+            branch_order[element_id] = f"(inclusive_branch_{counter + 1} {split_gateway} {gateway_id})"
+
+        join_incoming = sorted(
+            join_incoming,
+            key = lambda incoming_id: branch_order[
+                self.find_split_branch(split_gateway, gateway_id, incoming_id)
+            ]
+        )
+
+        for r in range(1, len(join_incoming) + 1):
+            for subset in combinations(join_incoming, r):
+                counter_conditions = []
+                active_conditions = [f"(active {target_id})" for target_id in subset]
+
+                for incoming_id in join_incoming:
+                    branch_start = self.find_split_branch(split_gateway, gateway_id, incoming_id)
+
+                    if branch_start:
+                        branch_predicate = branch_order[branch_start]
+
+                        if incoming_id in subset:
+                            counter_conditions.append(branch_predicate)
+
+                        else:
+                            counter_conditions.append(f"(not {branch_predicate})")
+
+                subset_choices.append("\t(and\n\t\t" + "\n\t\t".join(counter_conditions + active_conditions) + "\n\t)")
+
+        return  "or\n" + "\n".join(subset_choices) + "\n"
+
+    def find_split_branch(self, split_gateway: str, join_gateway: str, incoming_id: str) -> str:
+        for branch_start in self.get_outgoing(split_gateway):
+            queue = [branch_start]
+            visited = set()
+
+            while queue:
+                cur_id = queue.pop(0)
+
+                if cur_id in visited:
+                    continue
+
+                visited.add(cur_id)
+
+                if cur_id == incoming_id:
+                    return branch_start
+
+                if cur_id != join_gateway:
+                    queue.extend(self.get_outgoing(cur_id))
+
+        return None
+
+    def get_parallel_split_effects(self, gateway_id: str) -> str:
+        outgoing = self.get_outgoing(gateway_id)
+        
+        base_effects = [
+            f"not (active {gateway_id})",
+            f"completed {gateway_id}",
+        ]
+        
+        return base_effects + [f"active {target_id}" for target_id in outgoing]
+
+    def get_parallel_join_preconditions(self, gateway_id: str) -> str:
+
+        return [f"active {gateway_id}"] + [f"completed {target_id}" for target_id in self.get_incoming(gateway_id)]
+
+    def get_event_based_split_effects(self, gateway_id: str) -> str:
+        outgoing = self.get_outgoing(gateway_id)
+        choices = []
+
+        for target_id in outgoing:
+            choices.append(f"\t(active {target_id})")
+
+        return "oneof\n" + "\n".join(choices) + "\n"

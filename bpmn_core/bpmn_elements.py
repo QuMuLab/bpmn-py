@@ -2,10 +2,7 @@ import random
 import string
 from enum import Enum
 
-# TODO:
-# type capalization (inconsistent)
-
-unique_ids = [None]
+unique_ids = []
 super_type_map = {
     "Pool" : "Participant",
     "Swimlane" : "Lane",
@@ -22,6 +19,9 @@ class event_type(Enum):
     startEvent = "startEvent"
     endEvent = "endEvent"
     intermediateCatchEvent = "intermediateCatchEvent"
+    messageCatchEvent = "messageCatchEvent"
+    timerCatchEvent = "timerCatchEvent"
+    conditionalCatchEvent = "conditionalCatchEvent"
 
 class gateway_type(Enum):
     inclusiveGateway = "inclusiveGateway"

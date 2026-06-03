@@ -31,8 +31,6 @@ class Domain:
                 :typing
                 :negative-preconditions
                 :conditional-effects
-                :equality
-                :adl
             )
 
             (:types
@@ -41,6 +39,7 @@ class Domain:
                 task event - task_or_event
                 userTask serviceTask manualTask scriptTask sendTask recieveTask businessRuleTask - task
                 startEvent endEvent intermediateCatchEvent - event
+                messageCatchEvent timerCatchEvent conditionalCatchEvent - intermediateCatchEvent
                 eventBasedGateway exclusiveGateway parallelGateway inclusiveGateway - gateway
             )
 

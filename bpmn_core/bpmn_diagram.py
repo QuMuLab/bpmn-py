@@ -1,10 +1,15 @@
 from bpmn_core import bpmn_elements
 from re import sub
+import random
+import string
+
+unique_ids = []
 
 class Diagram:
     
     def __init__(self, name: str):
         self.name = self.clean_name(name)
+        self.id = self.generate_unique_id("process")
         self.pools = []
         self.swimlanes = []
         self.tasks = []
@@ -12,6 +17,18 @@ class Diagram:
         self.gateways = []
         self.seq_flows = []
         self.msg_flows = []
+
+    def generate_unique_id(self, prefix: str):
+        element_id = f"{prefix}_" + "".join(
+            random.choices(string.ascii_letters + string.digits, k = 7)
+        )
+
+        while element_id in unique_ids:
+            element_id = f"{prefix}_" + "".join(
+                random.choices(string.ascii_letters + string.digits, k = 7)
+            )
+
+        return element_id
 
     def clean_name(self, name: str) -> str:
         return sub(r"[^a-zA-Z0-9_]", "_", name.lower())
