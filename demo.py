@@ -26,7 +26,7 @@ logistics = pool.add_swimlane("Logistics")
 secretary = pool.add_swimlane("Secretary")
 warehouse = pool.add_swimlane("Warehouse")
 
-insure_parcel = logistics.add_event("Insure Parcel", task_type.userTask)
+insure_parcel = logistics.add_task("Insure Parcel", task_type.userTask)
 
 ship_goods = secretary.add_event("Ship Goods", event_type.startEvent)
 parallel_split = secretary.add_gateway(None, gateway_type.parallelGateway)
