@@ -81,51 +81,46 @@ class Element:
 
 class Pool(Element):
     def __init__(self, label: str, element_id: str = None, diagram = None):
-        super().__init__(label, element_id)
-        self.swimlanes = []
+        super().__init__(label, element_id, "Pool")
         self.diagram = diagram
+        self.process_id = diagram.generate_unique_id("Process") if diagram else None
+        self.swimlanes = []
 
     def add_swimlane(self, label: str, element_id: str = None):
-        swimlane = Swimlane(label, element_id, self.diagram)
+        swimlane = Swimlane(label, element_id, self.diagram, self)
         self.swimlanes.append(swimlane)
+        self.diagram.swimlanes.append(swimlane)
 
         return swimlane
 
 class Swimlane(Element):
 
-    def __init__(self, label: str, element_id: str = None, diagram = None):
+    def __init__(self, label: str, element_id: str = None, diagram = None, pool = None):
         super().__init__(label, element_id)
         self.diagram = diagram
+        self.pool = pool
+        self.lane_elements = []
 
     def add_task(self, label: str, type: str, element_id: str = None):
         task = Task(label, element_id, type)
         self.diagram.tasks.append(task)
+        self.lane_elements.append(task)
 
         return task
 
     def add_event(self, label: str, type: str, element_id: str = None):
         event = Event(label, element_id, type)
         self.diagram.events.append(event)
+        self.lane_elements.append(event)
 
         return event
 
     def add_gateway(self, label: str, type: str, element_id: str = None):
         gateway = Gateway(label, element_id, type)
         self.diagram.gateways.append(gateway)
+        self.lane_elements.append(gateway)
 
         return gateway
-
-    def add_sequence_flow(self, startRef: str, endRef: str, label: str = None, element_id: str = None):
-        seq_flow = SequenceFlow(label, element_id, startRef, endRef)
-        self.diagram.seq_flows.append(seq_flow)
-
-        return seq_flow
-
-    def add_message_flow(self, startRef: str, endRef: str, label: str = None, element_id: str = None):
-        msg_flow = MessageFlow(label, element_id, startRef, endRef)
-        self.diagram.msg_flows.append(msg_flow)
-
-        return msg_flow 
 
 class Task(Element):
 

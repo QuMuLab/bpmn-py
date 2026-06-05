@@ -1,13 +1,10 @@
-# Create python bpmn objects from an xml file
-# From the python objects create pddl files or bpmn xml files
-
 import xml.etree.ElementTree as ET
 
 from bpmn_core import bpmn_diagram
 from bpmn_core.bpmn_elements import event_type, gateway_type, task_type
 
 task_types = ["userTask", "serviceTask", "manualTask", "scriptTask", "sendTask", "recieveTask", "businessRuleTask", "task"]
-event_types = ["startEvent", "endEvent", "intermediateCatchEvent", "messageCatchEvent", "timerCatchEvent", "conditionalCatchEvent"]
+event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
 gateway_types = ["eventBasedGateway", "exclusiveGateway", "parallelGateway", "inclusiveGateway"]
 
 class BPMNParser:
@@ -47,10 +44,23 @@ class BPMNParser:
 
         for type in event_types:
             for event in self.root.findall(f".//bpmn:{type}", self.namespaces):
+                sub_type = event_type[type]
+                
+                if type == "intermediateCatchEvent":
+
+                    if event.find("bpmn:timerEventDefinition", self.namespaces) is not None:
+                        sub_type = event_type.timerCatchEvent
+
+                    if event.find("bpmn:messageEventDefinition", self.namespaces) is not None:
+                        sub_type = event_type.messageCatchEvent
+
+                    if event.find("bpmn:conditionalEventDefinition", self.namespaces) is not None:
+                        sub_type = event_type.conditionalCatchEvent
+
                 diagram.add_event(
                     label = self.clean_label(event.get("name")),
                     element_id = event.get("id"),
-                    type = event_type[type]
+                    type = sub_type
                 )
 
         for type in gateway_types:
