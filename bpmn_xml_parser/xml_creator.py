@@ -3,7 +3,12 @@ import xml.etree.ElementTree as ET
 import os
 
 class XMLCreator:
-    
+    """
+    Creates a BPMN xml file from a diagram object.
+
+    Args:
+        diagram: The diagram object you wish to create the xml for.
+    """
     BPMN = "http://www.omg.org/spec/BPMN/20100524/MODEL"
     BPMNDI = "http://www.omg.org/spec/BPMN/20100524/DI"
     DC = "http://www.omg.org/spec/DD/20100524/DC"
@@ -38,6 +43,9 @@ class XMLCreator:
         return lookup[ref]
 
     def create_xml(self):
+        """
+        Create the corresponding xml for the diagram.
+        """
         output_folder = os.path.join(os.getcwd(), f"output/{self.diagram.name}")
         os.makedirs(output_folder, exist_ok = True)
 

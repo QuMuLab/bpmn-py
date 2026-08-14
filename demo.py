@@ -3,7 +3,7 @@ from bpmn_py import Diagram, BPMNExporter, BPMNParser, XMLCreator
 # 1. Automatically create bpmn in python from xml file then export to pddl or xml
 
 diagram_name = "order_pizza"
-file_path = f"bpmn_diagrams/{diagram_name}.bpmn"
+file_path = f"examples/{diagram_name}.bpmn"
 
 parser = BPMNParser(file_path)
 diagram = parser.parse()
@@ -16,7 +16,7 @@ exporter.create_xml()
 
 # 2. "Manually" create bpmn in python then export to xml or pddl
 
-from bpmn_py import event_type, gateway_type, task_type
+from bpmn_py import userTask, startEvent, endEvent, parallelGateway, exclusiveGateway, inclusiveGateway
 
 diagram = Diagram("Dispatch of Goods")
 pool = diagram.add_pool("Computer Hardware Shop")
@@ -25,23 +25,23 @@ logistics = pool.add_swimlane("Logistics")
 secretary = pool.add_swimlane("Secretary")
 warehouse = pool.add_swimlane("Warehouse")
 
-insure_parcel = logistics.add_task("Insure Parcel", task_type.userTask)
+insure_parcel = logistics.add_task("Insure Parcel", userTask)
 
-ship_goods = secretary.add_event("Ship Goods", event_type.startEvent)
-parallel_split = secretary.add_gateway(None, gateway_type.parallelGateway)
-clarify = secretary.add_task("Clarify shipment method", task_type.userTask)
-special_sandling_split = secretary.add_gateway("Special sandling?", gateway_type.exclusiveGateway)
-if_insurance_split = secretary.add_gateway("If insurance necessary", gateway_type.inclusiveGateway)
-write_label = secretary.add_task("Write package label", task_type.userTask)
-if_insurance_join = secretary.add_gateway(None, gateway_type.inclusiveGateway)
-get_offers = secretary.add_task("Get 3 offers from logistic companies", task_type.userTask)
-select_company = secretary.add_task("Select logistic company and place order", task_type.userTask)
-special_sandling_join = secretary.add_gateway(None, gateway_type.exclusiveGateway)
+ship_goods = secretary.add_event("Ship Goods", startEvent)
+parallel_split = secretary.add_gateway(None, parallelGateway)
+clarify = secretary.add_task("Clarify shipment method", userTask)
+special_sandling_split = secretary.add_gateway("Special sandling?", exclusiveGateway)
+if_insurance_split = secretary.add_gateway("If insurance necessary", inclusiveGateway)
+write_label = secretary.add_task("Write package label", userTask)
+if_insurance_join = secretary.add_gateway(None, inclusiveGateway)
+get_offers = secretary.add_task("Get 3 offers from logistic companies", userTask)
+select_company = secretary.add_task("Select logistic company and place order", userTask)
+special_sandling_join = secretary.add_gateway(None, exclusiveGateway)
 
-package_goods = warehouse.add_task("Package Goods", task_type.userTask)
-parallel_join = warehouse.add_gateway(None, gateway_type.parallelGateway)
-prepare = warehouse.add_task("Prepare for picking up goods", task_type.userTask)
-shipment_prepared = warehouse.add_event("Shipment prepared", event_type.endEvent)
+package_goods = warehouse.add_task("Package Goods", userTask)
+parallel_join = warehouse.add_gateway(None, parallelGateway)
+prepare = warehouse.add_task("Prepare for picking up goods", userTask)
+shipment_prepared = warehouse.add_event("Shipment prepared", endEvent)
 
 diagram.add_sequence_flow(if_insurance_split, insure_parcel)
 diagram.add_sequence_flow(insure_parcel, if_insurance_join)

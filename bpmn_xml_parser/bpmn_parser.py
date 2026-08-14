@@ -8,7 +8,12 @@ event_types = ["startEvent", "endEvent", "intermediateCatchEvent"]
 gateway_types = ["eventBasedGateway", "exclusiveGateway", "parallelGateway", "inclusiveGateway"]
 
 class BPMNParser:
-    
+    """
+    Parses a BPMN xml file.
+
+    Args:
+        name: The filepath of the .bpmn file.
+    """
     def __init__(self, file_path):
         self.file_path = file_path
         self.tree = ET.parse(file_path)
@@ -19,6 +24,12 @@ class BPMNParser:
         return label.replace("\n", " ") if label else None
 
     def parse(self) -> bpmn_diagram.Diagram:
+        """
+        Parse the .bpmn file and create a BPMN Diagram from it.
+
+        Returns:
+            The newly created Diagram object.
+        """
         diagram_name = self.file_path.split("/")[-1][:-5]
         diagram = bpmn_diagram.Diagram(diagram_name)
 

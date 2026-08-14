@@ -16,6 +16,10 @@ super_type_map = {
 }
 
 class event_type(Enum):
+    """
+    Supported BPMN event types.
+    """
+
     startEvent = "startEvent"
     endEvent = "endEvent"
     intermediateCatchEvent = "intermediateCatchEvent"
@@ -24,12 +28,20 @@ class event_type(Enum):
     conditionalCatchEvent = "conditionalCatchEvent"
 
 class gateway_type(Enum):
+    """
+    Supported BPMN gateway types.
+    """
+
     inclusiveGateway = "inclusiveGateway"
     exclusiveGateway = "exclusiveGateway"
     parallelGateway = "parallelGateway"
     eventBasedGateway = "eventBasedGateway"
 
 class task_type(Enum):
+    """
+    Supported BPMN task types.
+    """
+
     task = "task"
     userTask = "userTask"
     serviceTask = "serviceTask"
@@ -87,6 +99,16 @@ class Pool(Element):
         self.swimlanes = []
 
     def add_swimlane(self, label: str, element_id: str = None):
+        """
+        Add a swimlane to the BPMN pool.
+
+        Args:
+            label: The name of the swimlane.
+            element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
+
+        Returns:
+            The newly created Swimlane object.
+        """
         swimlane = Swimlane(label, element_id, self.diagram, self)
         self.swimlanes.append(swimlane)
         self.diagram.swimlanes.append(swimlane)
@@ -102,6 +124,17 @@ class Swimlane(Element):
         self.lane_elements = []
 
     def add_task(self, label: str, type: str, element_id: str = None):
+        """
+        Add a task to the BPMN pool.
+
+        Args:
+            label: The name of the task.
+            type: BPMN task type.
+            element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
+
+        Returns:
+            The newly created Task object.
+        """
         task = Task(label, element_id, type)
         self.diagram.tasks.append(task)
         self.lane_elements.append(task)
@@ -109,6 +142,17 @@ class Swimlane(Element):
         return task
 
     def add_event(self, label: str, type: str, element_id: str = None):
+        """
+        Add an event to the BPMN pool.
+
+        Args:
+            label: The name of the event.
+            type: BPMN event type.
+            element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
+
+        Returns:
+            The newly created Event object.
+        """
         event = Event(label, element_id, type)
         self.diagram.events.append(event)
         self.lane_elements.append(event)
@@ -116,6 +160,17 @@ class Swimlane(Element):
         return event
 
     def add_gateway(self, label: str, type: str, element_id: str = None):
+        """
+        Add a gateway to the BPMN pool.
+
+        Args:
+            label: The name of the gateway.
+            type: BPMN gateway type.
+            element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
+
+        Returns:
+            The newly created Gateway object.
+        """
         gateway = Gateway(label, element_id, type)
         self.diagram.gateways.append(gateway)
         self.lane_elements.append(gateway)

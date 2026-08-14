@@ -3,11 +3,19 @@ from itertools import combinations
 import os
 
 class BPMNExporter:
+    """
+    Exports a BPMN Diagram object to pddl.
 
+    Args:
+        diagram: The diagram object you wish to export.
+    """
     def __init__(self, diagram: bpmn_diagram.Diagram):
         self.diagram = diagram
     
     def create_pddl(self):
+        """
+        Create the corresponding pddl for the diagram.
+        """
         pddl_domain, start_events = self.generate_pddl_domain()
         pddl_problems = self.generate_pddl_problems(pddl_domain, start_events)
 
