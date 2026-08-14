@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bpmn-py"
+version = "1.0.0"
+description = "Library for creating BPMN diagrams, and converting existing diagrams between xml, pddl, and python objects"
+readme = "README.md"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "bpmn_py*",
+    "bpmn_core*",
+    "bpmn_xml_parser*"
+]

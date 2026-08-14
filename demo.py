@@ -1,25 +1,24 @@
-# 1. Automatically create bpmn in python from xml file then export to pddl or xml
+from bpmn_py import Diagram, BPMNExporter, BPMNParser, XMLCreator
 
-from bpmn_core import bpmn_diagram, bpmn_exporter
-from bpmn_xml_parser import bpmn_parser, xml_creator
+# 1. Automatically create bpmn in python from xml file then export to pddl or xml
 
 diagram_name = "order_pizza"
 file_path = f"bpmn_diagrams/{diagram_name}.bpmn"
 
-parser = bpmn_parser.BPMNParser(file_path)
+parser = BPMNParser(file_path)
 diagram = parser.parse()
 
-exporter = bpmn_exporter.BPMNExporter(diagram)
+exporter = BPMNExporter(diagram)
 exporter.create_pddl()
 
-exporter = xml_creator.XMLCreator(diagram)
+exporter = XMLCreator(diagram)
 exporter.create_xml()
 
 # 2. "Manually" create bpmn in python then export to xml or pddl
 
-from bpmn_core.bpmn_elements import event_type, gateway_type, task_type
+from bpmn_py import event_type, gateway_type, task_type
 
-diagram = bpmn_diagram.Diagram("Dispatch of Goods")
+diagram = Diagram("Dispatch of Goods")
 pool = diagram.add_pool("Computer Hardware Shop")
 
 logistics = pool.add_swimlane("Logistics")
@@ -64,10 +63,10 @@ diagram.add_sequence_flow(package_goods, parallel_join)
 diagram.add_sequence_flow(parallel_join, prepare)
 diagram.add_sequence_flow(prepare, shipment_prepared)
 
-diagram.print_elements()
-
-exporter = bpmn_exporter.BPMNExporter(diagram)
+exporter = BPMNExporter(diagram)
 exporter.create_pddl()
 
-exporter = xml_creator.XMLCreator(diagram)
+exporter = XMLCreator(diagram)
 exporter.create_xml()
+
+# 3. Automatically create bpmn in python from xml file then manually edit it before exporting to pddl or xml
