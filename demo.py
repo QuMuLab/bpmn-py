@@ -10,7 +10,7 @@ parser = bpmn_parser.BPMNParser(file_path)
 diagram = parser.parse()
 
 exporter = bpmn_exporter.BPMNExporter(diagram)
-#exporter.create_pddl()
+exporter.create_pddl()
 
 exporter = xml_creator.XMLCreator(diagram)
 exporter.create_xml()
@@ -67,7 +67,7 @@ diagram.add_sequence_flow(prepare, shipment_prepared)
 diagram.print_elements()
 
 exporter = bpmn_exporter.BPMNExporter(diagram)
-#exporter.create_pddl()
+exporter.create_pddl()
 
 exporter = xml_creator.XMLCreator(diagram)
 exporter.create_xml()

@@ -59,6 +59,7 @@ class Domain:
         )
     
 class Action:
+
     def __init__(self, name: str, parameters: list[str], preconditions: list[str], effects: list[str]):
         self.name = self.clean_name(name)
         self.parameters = parameters
@@ -100,6 +101,7 @@ class Action:
         )
 
 class Problem:
+    
     def __init__(self, domain: Domain, start_event: bpmn_elements.Event, problem_num: int, objects: list[str], goals: list[str], initials: list[str]):
         self.domain = domain
         self.start_event = start_event

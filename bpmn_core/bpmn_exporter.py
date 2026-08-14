@@ -2,9 +2,6 @@ from bpmn_core import bpmn_diagram, bpmn_elements, pddl_classes
 from itertools import combinations
 import os
 
-# TODO:
-# Customizable event based
-
 class BPMNExporter:
 
     def __init__(self, diagram: bpmn_diagram.Diagram):

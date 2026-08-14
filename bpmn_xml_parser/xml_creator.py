@@ -2,9 +2,6 @@ from bpmn_core import bpmn_diagram
 import xml.etree.ElementTree as ET
 import os
 
-# TODO:
-# type hinting
-
 class XMLCreator:
     
     BPMN = "http://www.omg.org/spec/BPMN/20100524/MODEL"
