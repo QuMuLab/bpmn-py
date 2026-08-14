@@ -18,7 +18,7 @@ The following is a basic overview of the library, a more in-depth documentation 
 from bpmn_py import Diagram, BPMNExporter, BPMNParser, XMLCreator
 
 diagram_name = "order_pizza"
-file_path = f"bpmn_diagrams/{diagram_name}.bpmn"
+file_path = f"examples/{diagram_name}.bpmn"
 
 parser = BPMNParser(file_path)
 diagram = parser.parse()
