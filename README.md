@@ -5,7 +5,7 @@ This library allows you to work with BPMN Diagrams in Python for Automated Plann
 
 ## Setup ## 
 ```
-pip install https://github.com/QuMuLab/bpmn-py.git
+pip install git+https://github.com/QuMuLab/bpmn-py.git
 ```
 
 ## Usage ##
