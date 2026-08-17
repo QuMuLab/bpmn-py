@@ -17,4 +17,4 @@ sphinx:
 python:
   install:
     - method: pip
-      path: git+https://github.com/QuMuLab/bpmn-py.git
+      path: .
