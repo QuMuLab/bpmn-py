@@ -58,7 +58,7 @@ class Element:
 
         super_type = super_type_map.get(element_type, type(self).__name__)
 
-        if element_id is None or element_id in unique_ids:
+        if element_id is None:
             element_id = self.generate_unique_id(super_type)
 
         self.element_id = element_id

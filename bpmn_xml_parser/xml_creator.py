@@ -449,7 +449,7 @@ class XMLCreator:
         if source_obj.is_gateway() and len(outgoing_flows) > 1:
             sorted_flows = sorted(
                 outgoing_flows,
-                key = lambda f: self.positions[self.ref_id(f.endRef)]["center_y"]
+                key = lambda f: self.positions[f.endRef.element_id]["center_y"]
             )
 
             flow_index = sorted_flows.index(flow)
@@ -457,14 +457,17 @@ class XMLCreator:
             if len(sorted_flows) == 2:
                 if flow_index == 0:
                     start = (sx, source["y"])
+
                 else:
                     start = (sx, source["y"] + source["height"])
 
             elif len(sorted_flows) >= 3:
                 if flow_index == 0:
                     start = (sx, source["y"])
+
                 elif flow_index == 1:
                     start = (source["x"] + source["width"], sy)
+
                 else:
                     start = (sx, source["y"] + source["height"])
 
@@ -481,6 +484,7 @@ class XMLCreator:
         else:
             if target["row"] > source["row"]:
                 end = (tx, target["y"])
+                
             else:
                 end = (tx, target["y"] + target["height"])
 
