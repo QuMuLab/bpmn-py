@@ -30,17 +30,6 @@ class XMLCreator:
     
     def get_incoming(self, element_id: str) -> list:
         return self.incoming.get(element_id, [])
-    
-    def ref_id(self, ref):
-        return ref.element_id if hasattr(ref, "element_id") else ref
-
-    def ref_obj(self, ref):
-        if hasattr(ref, "element_id"):
-            return ref
-
-        lookup = {element.element_id: element for element in self.diagram.tasks + self.diagram.events + self.diagram.gateways}
-
-        return lookup[ref]
 
     def create_xml(self):
         """
@@ -58,8 +47,8 @@ class XMLCreator:
         self.outgoing = {}
 
         for flow in self.diagram.seq_flows:
-            source_id = self.ref_id(flow.startRef)
-            target_id = self.ref_id(flow.endRef)
+            source_id = flow.startRef.element_id
+            target_id = flow.endRef.element_id
 
             self.outgoing.setdefault(source_id, []).append(flow)
             self.incoming.setdefault(target_id, []).append(flow)
@@ -221,8 +210,8 @@ class XMLCreator:
     def add_sequence_flow(self, process, flow):
         attributes = {
             "id": flow.element_id,
-            "sourceRef": self.ref_id(flow.startRef),
-            "targetRef": self.ref_id(flow.endRef)
+            "sourceRef": flow.startRef.element_id,
+            "targetRef": flow.endRef.element_id
         }
 
         if flow.label:
@@ -237,8 +226,8 @@ class XMLCreator:
     def add_message_flow(self, collaboration, flow):
         attributes = {
             "id": flow.element_id,
-            "sourceRef": self.ref_id(flow.startRef),
-            "targetRef": self.ref_id(flow.endRef)
+            "sourceRef": flow.startRef.element_id,
+            "targetRef": flow.endRef.element_id
         }
 
         if flow.label:
@@ -303,11 +292,13 @@ class XMLCreator:
                 def assign_level(element, level):
                     if element.element_id in visited:
                         return
+                    
                     visited.add(element.element_id)
                     levels.setdefault(level, []).append(element)
 
                     for flow in self.get_outgoing(element.element_id):
-                        target = self.ref_obj(flow.endRef)
+                        target = flow.endRef
+
                         if target in elements:
                             assign_level(target, level + 1)
 
@@ -323,7 +314,7 @@ class XMLCreator:
                     if element.element_id not in visited:
                         assign_level(element, 0)
 
-                max_level_count = max((len(v) for v in levels.values()), default=1)
+                max_level_count = max((len(v) for v in levels.values()), default = 1)
                 lane_height = max(
                     min_lane_height,
                     lane_padding_top + lane_padding_bottom + ((max_level_count - 1) * row_gap) + 80
@@ -335,7 +326,7 @@ class XMLCreator:
             pool_y = current_y
 
             max_level = max(
-                (max(levels.keys(), default=0) for _, levels, _ in lane_layouts),
+                (max(levels.keys(), default = 0) for _, levels, _ in lane_layouts),
                 default=0
             )
 
@@ -429,8 +420,8 @@ class XMLCreator:
         return 100, 80
     
     def add_diagram_edge(self, plane, flow):
-        source_id = self.ref_id(flow.startRef)
-        target_id = self.ref_id(flow.endRef)
+        source_id = flow.startRef.element_id
+        target_id = flow.endRef.element_id
 
         source = self.positions[source_id]
         target = self.positions[target_id]
@@ -444,7 +435,7 @@ class XMLCreator:
             }
         )
 
-        source_obj = self.ref_obj(flow.startRef)
+        source_obj = flow.startRef
         outgoing_flows = self.get_outgoing(source_id)
 
         sx = source["center_x"]
@@ -458,7 +449,7 @@ class XMLCreator:
         if source_obj.is_gateway() and len(outgoing_flows) > 1:
             sorted_flows = sorted(
                 outgoing_flows,
-                key=lambda f: self.positions[self.ref_id(f.endRef)]["center_y"]
+                key = lambda f: self.positions[self.ref_id(f.endRef)]["center_y"]
             )
 
             flow_index = sorted_flows.index(flow)

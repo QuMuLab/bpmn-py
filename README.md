@@ -1,7 +1,7 @@
 # BPMN PY #
 
 ## Overview ##
-This library allows you to work with BPMN Diagrams in Python for Automated Planning applications.
+This library allows you to work with BPMN Diagrams in Python for Automated Planning applications. My code is an expansion of this [project](https://github.com/QuMuLab/bpmn-to-pddl-translation) by Jasper Nie.
 
 ## Setup ## 
 ```
@@ -9,7 +9,7 @@ pip install git+https://github.com/QuMuLab/bpmn-py.git
 ```
 
 ## Usage ##
-The following is a basic overview of the library, a more in-depth documentation can be found here: https://bpmn-py.readthedocs.io/
+The following is a basic overview of the library, a more in-depth documentation can be found here: https://bpmn-py.readthedocs.io/ or by running `bpmn-docs` in your terminal.
 
 ## Demo ##
 
@@ -89,3 +89,26 @@ exporter.create_xml()
 ```
 
 ### 3. Automatically create bpmn in python from xml file then manually edit it before exporting to pddl or xml
+
+```python
+from bpmn_py import Diagram, BPMNExporter, BPMNParser, XMLCreator
+from bpmn_py import userTask, startEvent, endEvent, parallelGateway, exclusiveGateway, inclusiveGateway
+
+diagram_name = "order_pizza"
+file_path = f"examples/{diagram_name}.bpmn"
+
+parser = BPMNParser(file_path)
+diagram = parser.parse()
+
+complain = diagram.add_task("Complain again to Delivery Service", userTask)
+for flow in diagram.seq_flows:
+    if flow.startRef.label == "Cancel Order" and flow.endRef.label == "Order Cancelled":
+        flow.endRef = complain
+        diagram.add_sequence_flow(complain, flow.endRef)
+
+exporter = BPMNExporter(diagram)
+exporter.create_pddl()
+
+exporter = XMLCreator(diagram)
+exporter.create_xml()
+```

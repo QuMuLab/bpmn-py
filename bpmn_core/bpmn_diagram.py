@@ -68,7 +68,7 @@ class Diagram:
         Returns:
             The newly created Swimlane object.
         """
-        swimlane = bpmn_elements.Swimlane(label, element_id)
+        swimlane = bpmn_elements.Swimlane(label, element_id, self)
         self.swimlanes.append(swimlane)
 
         return swimlane
@@ -124,13 +124,13 @@ class Diagram:
 
         return gateway
 
-    def add_sequence_flow(self, startRef: str, endRef: str, label: str = None, element_id: str = None):
+    def add_sequence_flow(self, startRef: bpmn_elements.Element, endRef: bpmn_elements.Element, label: str = None, element_id: str = None):
         """
         Add a sequence flow to the BPMN diagram.
 
         Args:
-            startRef: The element ID of the BPMN element the flow starts from.
-            endRef: The elemnent ID of the BPMN element the flow ends at.
+            startRef: The BPMN element the flow starts from.
+            endRef: The BPMN element the flow ends at.
             label: The name of the sequence flow.
             element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
 
@@ -142,13 +142,13 @@ class Diagram:
 
         return seq_flow
 
-    def add_message_flow(self, startRef: str, endRef: str, label: str = None, element_id: str = None):
+    def add_message_flow(self, startRef: bpmn_elements.Element, endRef: bpmn_elements.Element, label: str = None, element_id: str = None):
         """
         Add a message flow to the BPMN diagram.
 
         Args:
-            startRef: The element ID of the BPMN element the flow starts from.
-            endRef: The elemnent ID of the BPMN element the flow ends at.
+            startRef: The BPMN element the flow starts from.
+            endRef: The BPMN element the flow ends at.
             label: The name of the message flow.
             element_id: Optional BPMN element ID. If omitted, an ID is generated automatically.
 

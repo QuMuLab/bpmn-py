@@ -12,15 +12,15 @@ class BPMNParser:
     Parses a BPMN xml file.
 
     Args:
-        name: The filepath of the .bpmn file.
+        file_path: The filepath of the .bpmn file.
     """
-    def __init__(self, file_path):
+    def __init__(self, file_path: str):
         self.file_path = file_path
         self.tree = ET.parse(file_path)
         self.root = self.tree.getroot()
         self.namespaces = {"bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
 
-    def clean_label(self, label) -> str:
+    def clean_label(self, label: str) -> str:
         return label.replace("\n", " ") if label else None
 
     def parse(self) -> bpmn_diagram.Diagram:
@@ -82,20 +82,22 @@ class BPMNParser:
                     type = gateway_type[type]
                 )
         
+        elements_by_id = {element.element_id: element for element in diagram.get_elements()}
+
         for seq_flow in self.root.findall(".//bpmn:sequenceFlow", self.namespaces):
             diagram.add_sequence_flow(
                 label = self.clean_label(seq_flow.get("name")),
                 element_id = seq_flow.get("id"),
-                startRef = seq_flow.get("sourceRef"),
-                endRef = seq_flow.get("targetRef")
+                startRef = elements_by_id[seq_flow.get("sourceRef")],
+                endRef = elements_by_id[seq_flow.get("targetRef")]
             )
 
         for msg_flow in self.root.findall(".//bpmn:messageFlow", self.namespaces):
             diagram.add_message_flow(
                 label = self.clean_label(msg_flow.get("name")),
                 element_id = msg_flow.get("id"),
-                startRef = msg_flow.get("sourceRef"),
-                endRef = msg_flow.get("targetRef")
+                startRef = elements_by_id[msg_flow.get("sourceRef")],
+                endRef = elements_by_id[msg_flow.get("targetRef")]
             )
 
         return diagram

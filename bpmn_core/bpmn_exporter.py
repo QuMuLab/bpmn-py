@@ -49,8 +49,8 @@ class BPMNExporter:
         ])
     
         for msg_flow in self.diagram.msg_flows:
-            source = self.elements_by_id[msg_flow.startRef]
-            target = self.elements_by_id[msg_flow.endRef]
+            source = msg_flow.startRef
+            target = msg_flow.endRef
 
             if self.is_valid_message_flow(source, target):
                 seq_flow = self.diagram.add_sequence_flow(
@@ -63,8 +63,8 @@ class BPMNExporter:
                 self.elements_by_id[seq_flow.element_id] = seq_flow
 
         for flow in self.diagram.seq_flows:
-            source = flow.startRef
-            target = flow.endRef
+            source = flow.startRef.element_id
+            target = flow.endRef.element_id
 
             self.outgoing.setdefault(source, []).append(target)
             self.incoming.setdefault(target, []).append(source)
@@ -226,7 +226,7 @@ class BPMNExporter:
                 for element in self.diagram.events + self.diagram.tasks + self.diagram.gateways
             ]
             goals = ["finished"]
-            initials = [f"connected {seq_flow.startRef} {seq_flow.endRef}" for seq_flow in self.diagram.seq_flows]
+            initials = [f"connected {seq_flow.startRef.element_id} {seq_flow.endRef.element_id}" for seq_flow in self.diagram.seq_flows]
             
             if start_event:
                 initials.append(f"active {start_event.element_id}")

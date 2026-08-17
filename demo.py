@@ -1,4 +1,5 @@
 from bpmn_py import Diagram, BPMNExporter, BPMNParser, XMLCreator
+from bpmn_py import userTask, startEvent, endEvent, parallelGateway, exclusiveGateway, inclusiveGateway
 
 # 1. Automatically create bpmn in python from xml file then export to pddl or xml
 
@@ -15,8 +16,6 @@ exporter = XMLCreator(diagram)
 exporter.create_xml()
 
 # 2. "Manually" create bpmn in python then export to xml or pddl
-
-from bpmn_py import userTask, startEvent, endEvent, parallelGateway, exclusiveGateway, inclusiveGateway
 
 diagram = Diagram("Dispatch of Goods")
 pool = diagram.add_pool("Computer Hardware Shop")
@@ -70,3 +69,21 @@ exporter = XMLCreator(diagram)
 exporter.create_xml()
 
 # 3. Automatically create bpmn in python from xml file then manually edit it before exporting to pddl or xml
+
+diagram_name = "order_pizza"
+file_path = f"examples/{diagram_name}.bpmn"
+
+parser = BPMNParser(file_path)
+diagram = parser.parse()
+
+complain = diagram.add_task("Complain again to Delivery Service", userTask)
+for flow in diagram.seq_flows:
+    if flow.startRef.label == "Cancel Order" and flow.endRef.label == "Order Cancelled":
+        flow.endRef = complain
+        diagram.add_sequence_flow(complain, flow.endRef)
+
+exporter = BPMNExporter(diagram)
+exporter.create_pddl()
+
+exporter = XMLCreator(diagram)
+exporter.create_xml()
