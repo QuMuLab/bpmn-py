@@ -200,9 +200,7 @@ class SequenceFlow(Element):
     def __init__(self, label: str, element_id: str, startRef: Element, endRef: Element):
 
         if not isinstance(startRef, Element) or not isinstance(endRef, Element):
-            raise TypeError(
-                "startRef and endRef must be Element objects, not id strings."
-            )
+            raise TypeError("startRef and endRef must be Element objects, not id strings.")
 
         super().__init__(label, element_id)
         self.startRef = startRef
@@ -213,9 +211,7 @@ class MessageFlow(Element):
     def __init__(self, label: str, element_id: str, startRef: Element, endRef: Element):
 
         if not isinstance(startRef, Element) or not isinstance(endRef, Element):
-            raise TypeError(
-                "startRef and endRef must be Element objects, not id strings."
-            )
+            raise TypeError("startRef and endRef must be Element objects, not id strings.")
         
         super().__init__(label, element_id)
         self.startRef = startRef

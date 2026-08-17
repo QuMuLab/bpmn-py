@@ -9,7 +9,7 @@ pip install git+https://github.com/QuMuLab/bpmn-py.git
 ```
 
 ## Usage ##
-The following is a basic overview of the library, a more in-depth documentation can be found here: https://bpmn-py.readthedocs.io/ or by running `bpmn-docs` in your terminal.
+The following is a basic overview of the library, a more in-depth documentation can be found here: https://bpmn-py.readthedocs.io/ or by running `bpmn-py-docs` in your terminal.
 
 ## Demo ##
 

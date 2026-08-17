@@ -79,11 +79,15 @@ diagram = parser.parse()
 complain = diagram.add_task("Complain again to Delivery Service", userTask)
 for flow in diagram.seq_flows:
     if flow.startRef.label == "Cancel Order" and flow.endRef.label == "Order Cancelled":
+        order_cancelled = flow.endRef
         flow.endRef = complain
-        diagram.add_sequence_flow(complain, flow.endRef)
+        diagram.add_sequence_flow(complain, order_cancelled)
+
+        break
 
 exporter = BPMNExporter(diagram)
 exporter.create_pddl()
+
 
 exporter = XMLCreator(diagram)
 exporter.create_xml()

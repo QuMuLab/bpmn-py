@@ -18,4 +18,4 @@ include = [
 ]
 
 [project.scripts]
-bpmn-docs = "bpmn_py.docs:open_docs"
+bpmn-py-docs = "bpmn_py.docs:open_docs"
