@@ -16,3 +16,6 @@ include = [
     "bpmn_core*",
     "bpmn_xml_parser*"
 ]
+
+[project.scripts]
+bpmn-docs = "bpmn_py.docs:open_docs"

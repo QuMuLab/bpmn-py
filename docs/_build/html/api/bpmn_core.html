@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>bpmn_core package &#8212; BPMN_PY 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="bpmn-core-package">
+<h1>bpmn_core package<a class="headerlink" href="#bpmn-core-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-bpmn_core.bpmn_diagram">
+<span id="bpmn-core-bpmn-diagram-module"></span><h2>bpmn_core.bpmn_diagram module<a class="headerlink" href="#module-bpmn_core.bpmn_diagram" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_diagram.</span></span><span class="sig-name descname"><span class="pre">Diagram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a BPMN process diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the BPMN diagram.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_event">
+<span class="sig-name descname"><span class="pre">add_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.event_type" title="bpmn_core.bpmn_elements.event_type"><span class="pre">event_type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_event" title="Link to this definition">¶</a></dt>
+<dd><p>Add an event to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the event.</p></li>
+<li><p><strong>type</strong> – BPMN event type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Event object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_gateway">
+<span class="sig-name descname"><span class="pre">add_gateway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.gateway_type" title="bpmn_core.bpmn_elements.gateway_type"><span class="pre">gateway_type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_gateway" title="Link to this definition">¶</a></dt>
+<dd><p>Add a gateway to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the gateway.</p></li>
+<li><p><strong>type</strong> – BPMN gateway type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Gateway object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_message_flow">
+<span class="sig-name descname"><span class="pre">add_message_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_message_flow" title="Link to this definition">¶</a></dt>
+<dd><p>Add a message flow to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>startRef</strong> – The element ID of the BPMN element the flow starts from.</p></li>
+<li><p><strong>endRef</strong> – The elemnent ID of the BPMN element the flow ends at.</p></li>
+<li><p><strong>label</strong> – The name of the message flow.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created MessageFlow object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_pool">
+<span class="sig-name descname"><span class="pre">add_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_pool" title="Link to this definition">¶</a></dt>
+<dd><p>Add a pool to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the pool.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Pool object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_sequence_flow">
+<span class="sig-name descname"><span class="pre">add_sequence_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_sequence_flow" title="Link to this definition">¶</a></dt>
+<dd><p>Add a sequence flow to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>startRef</strong> – The element ID of the BPMN element the flow starts from.</p></li>
+<li><p><strong>endRef</strong> – The elemnent ID of the BPMN element the flow ends at.</p></li>
+<li><p><strong>label</strong> – The name of the sequence flow.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created SequenceFlow object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_swimlane">
+<span class="sig-name descname"><span class="pre">add_swimlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_swimlane" title="Link to this definition">¶</a></dt>
+<dd><p>Add a swimlane to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the swimlane.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Swimlane object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.add_task">
+<span class="sig-name descname"><span class="pre">add_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.task_type" title="bpmn_core.bpmn_elements.task_type"><span class="pre">task_type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.add_task" title="Link to this definition">¶</a></dt>
+<dd><p>Add a task to the BPMN diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the task.</p></li>
+<li><p><strong>type</strong> – BPMN task type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Task object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.clean_name">
+<span class="sig-name descname"><span class="pre">clean_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.clean_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.generate_unique_id">
+<span class="sig-name descname"><span class="pre">generate_unique_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.generate_unique_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.get_elements" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_diagram.Diagram.print_elements">
+<span class="sig-name descname"><span class="pre">print_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_diagram.Diagram.print_elements" title="Link to this definition">¶</a></dt>
+<dd><p>Print all the elements in the BPMN diagram.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bpmn_core.bpmn_elements">
+<span id="bpmn-core-bpmn-elements-module"></span><h2>bpmn_core.bpmn_elements module<a class="headerlink" href="#module-bpmn_core.bpmn_elements" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element.generate_unique_id">
+<span class="sig-name descname"><span class="pre">generate_unique_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element.generate_unique_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element.is_event">
+<span class="sig-name descname"><span class="pre">is_event</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element.is_event" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element.is_gateway">
+<span class="sig-name descname"><span class="pre">is_gateway</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element.is_gateway" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element.is_sequence_flow">
+<span class="sig-name descname"><span class="pre">is_sequence_flow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element.is_sequence_flow" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Element.is_task">
+<span class="sig-name descname"><span class="pre">is_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Element.is_task" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Event">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.event_type" title="bpmn_core.bpmn_elements.event_type"><span class="pre">event_type</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Event" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Gateway">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Gateway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.gateway_type" title="bpmn_core.bpmn_elements.gateway_type"><span class="pre">gateway_type</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Gateway" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.MessageFlow">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">MessageFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.MessageFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Pool">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Pool" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Pool.add_swimlane">
+<span class="sig-name descname"><span class="pre">add_swimlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Pool.add_swimlane" title="Link to this definition">¶</a></dt>
+<dd><p>Add a swimlane to the BPMN pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the swimlane.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Swimlane object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.SequenceFlow">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">SequenceFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.SequenceFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Swimlane">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Swimlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Swimlane" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Swimlane.add_event">
+<span class="sig-name descname"><span class="pre">add_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Swimlane.add_event" title="Link to this definition">¶</a></dt>
+<dd><p>Add an event to the BPMN pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the event.</p></li>
+<li><p><strong>type</strong> – BPMN event type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Event object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Swimlane.add_gateway">
+<span class="sig-name descname"><span class="pre">add_gateway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Swimlane.add_gateway" title="Link to this definition">¶</a></dt>
+<dd><p>Add a gateway to the BPMN pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the gateway.</p></li>
+<li><p><strong>type</strong> – BPMN gateway type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Gateway object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Swimlane.add_task">
+<span class="sig-name descname"><span class="pre">add_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Swimlane.add_task" title="Link to this definition">¶</a></dt>
+<dd><p>Add a task to the BPMN pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – The name of the task.</p></li>
+<li><p><strong>type</strong> – BPMN task type.</p></li>
+<li><p><strong>element_id</strong> – Optional BPMN element ID. If omitted, an ID is generated automatically.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The newly created Task object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.Task">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">Task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.task_type" title="bpmn_core.bpmn_elements.task_type"><span class="pre">task_type</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.Task" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">event_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Supported BPMN event types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.conditionalCatchEvent">
+<span class="sig-name descname"><span class="pre">conditionalCatchEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'conditionalCatchEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.conditionalCatchEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.endEvent">
+<span class="sig-name descname"><span class="pre">endEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'endEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.endEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.intermediateCatchEvent">
+<span class="sig-name descname"><span class="pre">intermediateCatchEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'intermediateCatchEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.intermediateCatchEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.messageCatchEvent">
+<span class="sig-name descname"><span class="pre">messageCatchEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'messageCatchEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.messageCatchEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.startEvent">
+<span class="sig-name descname"><span class="pre">startEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'startEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.startEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.event_type.timerCatchEvent">
+<span class="sig-name descname"><span class="pre">timerCatchEvent</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'timerCatchEvent'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.event_type.timerCatchEvent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.gateway_type">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">gateway_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.gateway_type" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Supported BPMN gateway types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.gateway_type.eventBasedGateway">
+<span class="sig-name descname"><span class="pre">eventBasedGateway</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eventBasedGateway'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.gateway_type.eventBasedGateway" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.gateway_type.exclusiveGateway">
+<span class="sig-name descname"><span class="pre">exclusiveGateway</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exclusiveGateway'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.gateway_type.exclusiveGateway" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.gateway_type.inclusiveGateway">
+<span class="sig-name descname"><span class="pre">inclusiveGateway</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'inclusiveGateway'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.gateway_type.inclusiveGateway" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.gateway_type.parallelGateway">
+<span class="sig-name descname"><span class="pre">parallelGateway</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parallelGateway'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.gateway_type.parallelGateway" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_elements.</span></span><span class="sig-name descname"><span class="pre">task_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Supported BPMN task types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.businessRuleTask">
+<span class="sig-name descname"><span class="pre">businessRuleTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'businessRuleTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.businessRuleTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.manualTask">
+<span class="sig-name descname"><span class="pre">manualTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'manualTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.manualTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.recieveTask">
+<span class="sig-name descname"><span class="pre">recieveTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'recieveTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.recieveTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.scriptTask">
+<span class="sig-name descname"><span class="pre">scriptTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scriptTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.scriptTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.sendTask">
+<span class="sig-name descname"><span class="pre">sendTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sendTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.sendTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.serviceTask">
+<span class="sig-name descname"><span class="pre">serviceTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'serviceTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.serviceTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.task">
+<span class="sig-name descname"><span class="pre">task</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'task'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.task" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_elements.task_type.userTask">
+<span class="sig-name descname"><span class="pre">userTask</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'userTask'</span></span><a class="headerlink" href="#bpmn_core.bpmn_elements.task_type.userTask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bpmn_core.bpmn_exporter">
+<span id="bpmn-core-bpmn-exporter-module"></span><h2>bpmn_core.bpmn_exporter module<a class="headerlink" href="#module-bpmn_core.bpmn_exporter" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.bpmn_exporter.</span></span><span class="sig-name descname"><span class="pre">BPMNExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_diagram.Diagram" title="bpmn_core.bpmn_diagram.Diagram"><span class="pre">Diagram</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Exports a BPMN Diagram object to pddl.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>diagram</strong> – The diagram object you wish to export.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.create_pddl">
+<span class="sig-name descname"><span class="pre">create_pddl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.create_pddl" title="Link to this definition">¶</a></dt>
+<dd><p>Create the corresponding pddl for the diagram.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.find_split_branch">
+<span class="sig-name descname"><span class="pre">find_split_branch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_gateway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join_gateway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incoming_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.find_split_branch" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.generate_pddl_domain">
+<span class="sig-name descname"><span class="pre">generate_pddl_domain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.pddl_classes.Domain" title="bpmn_core.pddl_classes.Domain"><span class="pre">Domain</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.bpmn_elements.Event" title="bpmn_core.bpmn_elements.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.generate_pddl_domain" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.generate_pddl_problems">
+<span class="sig-name descname"><span class="pre">generate_pddl_problems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.pddl_classes.Domain" title="bpmn_core.pddl_classes.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.bpmn_elements.Event" title="bpmn_core.bpmn_elements.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.pddl_classes.Problem" title="bpmn_core.pddl_classes.Problem"><span class="pre">Problem</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.generate_pddl_problems" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_event_based_split_effects">
+<span class="sig-name descname"><span class="pre">get_event_based_split_effects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_event_based_split_effects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_exclusive_split_effects">
+<span class="sig-name descname"><span class="pre">get_exclusive_split_effects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_exclusive_split_effects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_inclusive_join_preconditions">
+<span class="sig-name descname"><span class="pre">get_inclusive_join_preconditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclusive_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_inclusive_join_preconditions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_inclusive_split_effects">
+<span class="sig-name descname"><span class="pre">get_inclusive_split_effects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclusive_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_inclusive_split_effects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_incoming">
+<span class="sig-name descname"><span class="pre">get_incoming</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_incoming" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_outgoing">
+<span class="sig-name descname"><span class="pre">get_outgoing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_outgoing" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_parallel_join_preconditions">
+<span class="sig-name descname"><span class="pre">get_parallel_join_preconditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_parallel_join_preconditions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.get_parallel_split_effects">
+<span class="sig-name descname"><span class="pre">get_parallel_split_effects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.get_parallel_split_effects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.is_valid_message_flow">
+<span class="sig-name descname"><span class="pre">is_valid_message_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><span class="pre">Element</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.Element" title="bpmn_core.bpmn_elements.Element"><span class="pre">Element</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.is_valid_message_flow" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.bpmn_exporter.BPMNExporter.map_inclusive_gateway_pairs">
+<span class="sig-name descname"><span class="pre">map_inclusive_gateway_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#bpmn_core.bpmn_elements.Event" title="bpmn_core.bpmn_elements.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#bpmn_core.bpmn_exporter.BPMNExporter.map_inclusive_gateway_pairs" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bpmn_core.pddl_classes">
+<span id="bpmn-core-pddl-classes-module"></span><h2>bpmn_core.pddl_classes module<a class="headerlink" href="#module-bpmn_core.pddl_classes" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Action">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.pddl_classes.</span></span><span class="sig-name descname"><span class="pre">Action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preconditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Action" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Action.clean_name">
+<span class="sig-name descname"><span class="pre">clean_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#bpmn_core.pddl_classes.Action.clean_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Action.create_string">
+<span class="sig-name descname"><span class="pre">create_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Action.create_string" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Domain">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.pddl_classes.</span></span><span class="sig-name descname"><span class="pre">Domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_diagram.Diagram" title="bpmn_core.bpmn_diagram.Diagram"><span class="pre">Diagram</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Domain" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Domain.create_action">
+<span class="sig-name descname"><span class="pre">create_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preconditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Domain.create_action" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Domain.generate_file">
+<span class="sig-name descname"><span class="pre">generate_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Domain.generate_file" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Problem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bpmn_core.pddl_classes.</span></span><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.pddl_classes.Domain" title="bpmn_core.pddl_classes.Domain"><span class="pre">Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bpmn_core.bpmn_elements.Event" title="bpmn_core.bpmn_elements.Event"><span class="pre">Event</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Problem" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bpmn_core.pddl_classes.Problem.generate_file">
+<span class="sig-name descname"><span class="pre">generate_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bpmn_core.pddl_classes.Problem.generate_file" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bpmn_core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bpmn_core" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">BPMN_PY</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Nicholas Saloufakos.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/api/bpmn_core.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
