@@ -88,6 +88,5 @@ for flow in diagram.seq_flows:
 exporter = BPMNExporter(diagram)
 exporter.create_pddl()
 
-
 exporter = XMLCreator(diagram)
 exporter.create_xml()
